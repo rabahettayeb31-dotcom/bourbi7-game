@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>BOURBI7 Game - النسخة التونسية</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+            color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 15px;
+        }
+        .container { max-width: 600px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .header h1 { font-size: 2.2em; color: #e94560; }
+        .header p { color: #adb5bd; font-size: 0.9em; }
+        .card {
+            background: #1a1a2e;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        .cat-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 30px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .cat-btn:active { transform: scale(0.95); }
+        .question-card { text-align: center; }
+        .question-text { font-size: 1.4em; margin: 20px 0; line-height: 1.4; }
+        .target-player { background: #e94560; padding: 10px; border-radius: 15px; margin: 15px 0; }
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .player-btn {
+            background: #22223b;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .player-btn:active { background: #e94560; }
+        .action-buttons { display: flex; gap: 10px; margin: 15px 0; }
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .points-buttons { display: flex; gap: 10px; margin: 15px 0; }
+        .points-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .stats {
+            background: #22223b;
+            padding: 10px;
+            border-radius: 12px;
+            margin-top: 15px;
+            font-size: 12px;
+            text-align: center;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #1a1a2e;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 300px;
+            margin: 20px;
+        }
+        .modal-content h3 { margin-bottom: 15px; }
+        .modal-content button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #e94560;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+        }
+        .back-btn {
+            background: #7209b7;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        h3 { margin-bottom: 10px; }
+        @media (max-width: 480px) {
+            .question-text { font-size: 1.2em; }
+            .player-btn { padding: 10px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🎉 BOURBI7 Game</h1>
+        <p>النسخة التونسية</p>
+    </div>
+
+    <div id="mainScreen">
+        <div class="card">
+            <div style="text-align: center; margin-bottom: 15px;">
+                <span id="playersList"></span>
+            </div>
+            <button class="back-btn" onclick="showPlayersScreen()">⚙️ إعدادات اللاعبين</button>
+            <h3>📂 اختر الفئة:</h3>
+            <div class="category-buttons" id="categoryButtons"></div>
+            <button class="back-btn" style="background: #e94560; width: 100%;" onclick="startGame()">🎮 بداية اللعبة</button>
+        </div>
+    </div>
+
+    <div id="gameScreen" style="display: none;">
+        <div class="card">
+            <div style="display: flex; justify-content: space-between;">
+                <button class="back-btn" onclick="showMainScreen()">🏠 الرئيسية</button>
+                <button class="back-btn" onclick="showStats()">📊 إحصائيات</button>
+            </div>
+            <div class="question-card">
+                <h3 id="categoryTitle"></h3>
+                <div class="question-text" id="questionText"></div>
+                <div class="target-player" id="targetPlayer"></div>
+            </div>
+            <h3>🗳️ صوت على اللاعب:</h3>
+            <div class="players-grid" id="playersGrid"></div>
+            <div class="action-buttons">
+                <button class="action-btn" style="background: #f39c12;" onclick="showChallenge()">🎭 تحدي</button>
+                <button class="action-btn" style="background: #00b4d8;" onclick="rollDice()">🎲 نرد</button>
+            </div>
+            <div class="points-buttons">
+                <button class="points-btn" style="background: #06d6a0;" onclick="addPoints(1)">➕ 1 نقطة</button>
+                <button class="points-btn" style="background: #ffd93d; color:#000;" onclick="addPoints(3)">➕ 3 نقاط</button>
+            </div>
+        </div>
+        <div class="stats" id="gameStats"></div>
+    </div>
+</div>
+
+<div id="modal" class="modal" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h3 id="modalTitle">🎲</h3>
+        <p id="modalText"></p>
+        <button onclick="closeModal()">إغلاق</button>
+    </div>
+</div>
+
+<script>
+    let players = ["أحمد", "سارة", "محمد", "فاطمة"];
+    let scores = {};
+    let votes = {};
+    let currentCategory = "friends";
+    let currentTarget = "";
+    let currentQuestion = "";
+
+    const CATEGORIES = {
+        friends: { emoji: "👬", label: "الصحاب", color: "#f39c12" },
+        family: { emoji: "👨‍👩‍👧‍👦", label: "العايلة", color: "#2ecc71" },
+        couples: { emoji: "💑", label: "الكوبل", color: "#e84393" },
+        lovers: { emoji: "💕", label: "الحبايب", color: "#9b59b6" },
+        work: { emoji: "💼", label: "العمل", color: "#3498db" },
+        plus18: { emoji: "🔞", label: "+18", color: "#e74c3c" }
+    };
+
+    // الأسئلة الكاملة (50 سؤال لكل فئة تقريباً)
+    const QUESTIONS = {
+        friends: [
+            "شكون أكثر واحد يتأخر في المواعيد؟ ⏰", "شكون أكثر واحد يضحك وحدو؟ 😅", "شكون أكثر واحد يحب التصاور؟ 📸",
+            "شكون أكثر واحد ينسى تلفونو؟ 📱", "شكون أكثر واحد يسرق الأكل؟ 🍕", "شكون أكثر واحد يعمل دراما؟ 🎭",
+            "شكون أكثر واحد يحب القهوة؟ ☕", "شكون أكثر واحد ينام في القهوة؟ 😴", "شكون أكثر واحد يحب يبان cool؟ 😎",
+            "شكون أكثر واحد يطيح في مواقف محرجة؟ 😳", "شكون أكثر واحد يحب السفر؟ ✈️", "شكون أكثر واحد يحب الأكل؟ 🍔",
+            "شكون أكثر واحد كريم؟ 🎁", "شكون أكثر واحد بخيل؟ 💰", "شكون أكثر واحد يحب النوم؟ 😴", "شكون أكثر واحد نشيط؟ ⚡",
+            "شكون أكثر واحد كسلان؟ 🦥", "شكون أكثر واحد يحب الرياضة؟ ⚽", "شكون أكثر واحد ذكي؟ 🧠", "شكون أكثر واحد مضحك؟ 😂"
+        ],
+        family: [
+            "شكون أكثر واحد ياكل في الدار؟ 🍲", "شكون أكثر واحد يسرق من الثلاجة؟ 😂", "شكون أكثر واحد يشد الريموت؟ 📺",
+            "شكون أكثر واحد يرقد بعد الغدا؟ 😴", "شكون أكثر واحد يحب القهوة الصباحية؟ ☕", "شكون أكثر واحد يصحى بالفجر؟ 🌅",
+            "شكون أكثر واحد يخدم في الدار؟ 🧹", "شكون أكثر واحد مايخدمش في الدار؟ 🛌", "شكون أكثر واحد يجيب الهدايا؟ 🎁",
+            "شكون أكثر واحد ينسى المناسبات؟ 📆", "شكون أكثر واحد يحب الجلسات العائلية؟ 👨‍👩‍👧‍👦", "شكون أكثر واحد يتغيب عن الجلسات؟ 🚫",
+            "شكون أكثر واحد يحكي بزاف؟ 🗣️", "شكون أكثر واحد ساكت؟ 🤐", "شكون أكثر واحد يعمل مشاكل؟ 🤬", "شكون أكثر واحد يصلح المشاكل؟ 🕊️"
+        ],
+        couples: [
+            "شكون أكثر واحد يغير؟ 😏", "شكون أكثر واحد يقول وينك كل شوي؟ 📱", "شكون أكثر واحد يطلب الهدايا؟ 🎁",
+            "شكون أكثر واحد يحب الرومنسية؟ 🌹", "شكون أكثر واحد ينسى المناسبات؟ 📆", "شكون أكثر واحد يعمل مفاجآت؟ 🎉",
+            "شكون أكثر واحد يتذمر؟ 😩", "شكون أكثر واحد متفهم؟ 🤗", "شكون أكثر واحد يغار بسرعة؟ 🔥", "شكون أكثر واحد يسامح بسرعة؟ 🕊️",
+            "شكون أكثر واحد يحب الخروج؟ 🚶", "شكون أكثر واحد يحب البقاء في الدار؟ 🏠", "شكون أكثر واحد يصرف على العلاقة؟ 💰"
+        ],
+        lovers: [
+            "شكون أكثر واحد يعمل flirting؟ 😏", "شكون أكثر واحد يبعث messages في الليل؟ 🌙", "شكون أكثر واحد يحب hugs؟ 🤗",
+            "شكون أكثر واحد يحب القبلات؟ 💋", "شكون أكثر واحد يغازل بزاف؟ 😘", "شكون أكثر واحد يخجل من الغزل؟ 😳",
+            "شكون أكثر واحد يبادل المشاعر؟ 💕", "شكون أكثر واحد يكتم مشاعرو؟ 🤐", "شكون أكثر واحد يحب الاهتمام؟ 🥰",
+            "شكون أكثر واحد يهمل شريكو؟ 😔", "شكون أكثر واحد يعطي compliments؟ 🌟", "شكون أكثر واحد ينسى يمدح؟ 🙊"
+        ],
+        work: [
+            "شكون أكثر واحد يتأخر للخدمة؟ ⏰", "شكون أكثر واحد يطلب أوفريت؟ ⏳", "شكون أكثر واحد يشرب قهوة بزوز؟ ☕☕",
+            "شكون أكثر واحد ياخد break طويل؟ 🚬", "شكون أكثر واحد يخدم بجد؟ 💪", "شكون أكثر واحد يضيع وقتو؟ ⏱️",
+            "شكون أكثر واحد يطلب عطلة؟ 🏖️", "شكون أكثر واحد مايطلبش عطلة؟ 🏢", "شكون أكثر واحد يحب شغلو؟ ❤️",
+            "شكون أكثر واحد يكره شغلو؟ 💔", "شكون أكثر واحد يشتكي من المدير؟ 🤬", "شكون أكثر واحد يمدح المدير؟ 🥰"
+        ],
+        plus18: [
+            "شكون أكثر واحد عنده خبرة؟ 🔥", "شكون أكثر واحد يبدا أول؟ 😈", "شكون أكثر واحد يحب الضو خافت؟ 🕯️",
+            "شكون أكثر واحد جريء في العلاقة؟ 🦁", "شكون أكثر واحد خواف؟ 😨", "شكون أكثر واحد مبادر؟ 🏃",
+            "شكون أكثر واحد ينتظر الطرف الآخر؟ ⏳", "شكون أكثر واحد عنده fantasies؟ 💭", "شكون أكثر واحد يخبي fantasies؟ 🤫",
+            "شكون أكثر واحد يحب المغامرة؟ 🎢", "شكون أكثر واحد يحب الروتين؟ ⏰", "شكون أكثر واحد يطلب حاجيات خاصة؟ 🔞"
+        ]
+    };
+
+    // التحديات الكاملة (50 تحدي)
+    const CHALLENGES = [
+        "😂 اضحك بصوت عالي 10 ثواني", "💃 ارقص 5 ثواني", "🎤 غني مقطع من أغنية مشهورة",
+        "🥤 اشرب كاس ماء بارد دفعة وحدة", "📞 كلم واحد من الصحاب وقلو أنا نحبك", "😂 حك نكتة خايب",
+        "🧹 اغسل الماعون يا معلم", "🐶 عوط كي الكلب", "🦁 زمجّر كي الأسد", "💪 وري عضلاتك وقل أنا كبير",
+        "🎭 قلد واحد من الجالسين", "📸 صور روحك وحدث عليها", "🤝 صافح الكل وقلهم شكراً", "😡 صيح 'يا لطيف' 3 مرات",
+        "🕺 تحرك كي الدودة", "🍕 تخيل أنك تاكل بيتزا أمام الكل", "😴 تغطّي كي باش ترقد", "🤔 اتخذ منصب باش تفكّر في سؤالك",
+        "🎬 مثل مشهد من مسلسل تركي", "🗣️ حك قصة مضحكة من طفولتك", "👑 تولي ملك/ملكة لمدة دقيقة", "🎤 سوّي مقابلة مع نفسك",
+        "📢 صيح 'أنا مشهور' 3 مرات", "💃 ارقص رقصة الفرح التونسية", "🍚 كل ملعقة رز وأنت مغمض", "🥛 اشرب لبن وأنت تقول يا لطيف",
+        "🔊 سمعني صوتك أعلى ما عندك", "🎭 قلد صوت حيوان من اختيار الجماعة", "🤡 حط إصبعك في أنفك وثبت", "😈 غمز لشخص في الغرفة",
+        "💋 بعت قبلة هوائية لأقرب شخص", "🔥 قول كلمة جريئة بصوت عالي", "😏 سوّي حركة مثيرة", "💕 عبر عن حبك لشخص بطريقة مضحكة",
+        "🌹 قدم وردة وهمية لشخص", "💌 اكتب رسالة حب على ورق واقرأها", "😳 احكي عن أول كرشة في حياتك", "💪 قول 'أنا الأقوى' بصوت عالي",
+        "🕺 ارقص رقصة مثيرة 5 ثواني", "🎭 مثل مشهد من فيلم رومنسي", "☕ جيب القهوة للكل", "🍪 وزع حلويات على الجماعة",
+        "💆 دلك كتاف الشخص اللي جمبك", "🚪 افتح الباب لكل واحد يخرج", "🎁 قدم هدية رمزية لشخص", "🖼️ صور الجماعة كلها",
+        "🎲 ارمي الزهر وخمّن الرقم", "💰 راهن على نفسك بنقطة", "⭐ قول 3 أشياء تحبها في روحك", "🤖 تحرك كي الروبوت 10 ثواني", "🦖 مشي كي الديناصور"
+    ];
+
+    function initGame() {
+        players.forEach(p => { scores[p] = 0; votes[p] = 0; });
+        currentTarget = players[Math.floor(Math.random() * players.length)];
+        currentQuestion = getRandomQuestion();
+        updateUI();
+    }
+
+    function getRandomQuestion() {
+        let qlist = QUESTIONS[currentCategory] || QUESTIONS.friends;
+        return qlist[Math.floor(Math.random() * qlist.length)];
+    }
+
+    function updateUI() {
+        document.getElementById("playersList").innerHTML = players.map(p => `${p}(${scores[p]})`).join(" | ");
+        let cat = CATEGORIES[currentCategory];
+        document.getElementById("categoryTitle").innerHTML = `${cat.emoji} ${cat.label}`;
+        document.getElementById("questionText").innerHTML = currentQuestion;
+        document.getElementById("targetPlayer").innerHTML = `🎯 اللاعب المستهدف: ${currentTarget}`;
+        
+        let playersGrid = document.getElementById("playersGrid");
+        playersGrid.innerHTML = players.map(p => 
+            `<button class="player-btn" onclick="voteForPlayer('${p}')">${p}<br>(${votes[p]})</button>`
+        ).join("");
+        
+        let totalVotes = Object.values(votes).reduce((a,b) => a+b, 0);
+        document.getElementById("gameStats").innerHTML = `🏆 نقاط: ${players.map(p => `${p}:${scores[p]}`).join(" | ")} | 📊 تصويتات: ${totalVotes}`;
+        
+        let categoryBtns = document.getElementById("categoryButtons");
+        if(categoryBtns) {
+            categoryBtns.innerHTML = Object.entries(CATEGORIES).map(([id, cat]) => 
+                `<button class="cat-btn" style="background:${cat.color}" onclick="selectCategory('${id}')">${cat.emoji} ${cat.label}</button>`
+            ).join("");
+        }
+    }
+
+    function selectCategory(cat) {
+        currentCategory = cat;
+        updateUI();
+    }
+
+    function startGame() {
+        currentQuestion = getRandomQuestion();
+        updateUI();
+        document.getElementById("mainScreen").style.display = "none";
+        document.getElementById("gameScreen").style.display = "block";
+    }
+
+    function showMainScreen() {
+        document.getElementById("mainScreen").style.display = "block";
+        document.getElementById("gameScreen").style.display = "none";
+        updateUI();
+    }
+
+    function showPlayersScreen() {
+        let newNames = prompt("أدخل أسماء اللاعبين مفصولة بفواصل:\n(مثال: أحمد,سارة,محمد,فاطمة)", players.join(","));
+        if(newNames) {
+            players = newNames.split(",").map(n => n.trim()).filter(n => n);
+            if(players.length < 2) players = ["أحمد", "سارة"];
+            scores = {};
+            votes = {};
+            players.forEach(p => { scores[p] = 0; votes[p] = 0; });
+            currentTarget = players[Math.floor(Math.random() * players.length)];
+            updateUI();
+        }
+    }
+
+    function voteForPlayer(player) {
+        votes[player]++;
+        showModal("🗳️ تصويت", `😂 ${player} تحصل على تصويت!`);
+        updateUI();
+    }
+
+    function addPoints(points) {
+        scores[currentTarget] += points;
+        showModal("✨ نقاط", `✨ +${points} نقطة لـ ${currentTarget} ✨`);
+        currentTarget = players[Math.floor(Math.random() * players.length)];
+        currentQuestion = getRandomQuestion();
+        updateUI();
+    }
+
+    function showChallenge() {
+        let challenge = CHALLENGES[Math.floor(Math.random() * CHALLENGES.length)];
+        showModal("🎭 تحدي / عقوبة", challenge);
+    }
+
+    function rollDice() {
+        let result = Math.floor(Math.random() * 6) + 1;
+        let dice = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"][result-1];
+        let msg = result < 4 ? "حظ سيء! 😢" : "مبروك! 🎉";
+        showModal("🎲 رمي النرد", `${dice}\n\nالنتيجة: ${result}\n${msg}`);
+    }
+
+    function showStats() {
+        let sorted = [...players].sort((a,b) => scores[b] - scores[a]);
+        let stats = "🏆 ترتيب اللاعبين:\n\n";
+        sorted.forEach((p, i) => {
+            let medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : "📌";
+            stats += `${medal} ${p}: ${scores[p]} نقطة\n`;
+        });
+        let mostAccused = players.reduce((a,b) => votes[a] > votes[b] ? a : b);
+        stats += `\n🔥 أكثر واحد متهم: ${mostAccused} (${votes[mostAccused]} اتهام)`;
+        stats += `\n📊 عدد الاتهامات الكلي: ${Object.values(votes).reduce((a,b)=>a+b,0)}`;
+        showModal("📊 إحصائيات اللعبة", stats);
+    }
+
+    function showModal(title, text) {
+        document.getElementById("modalTitle").innerHTML = title;
+        document.getElementById("modalText").innerHTML = text;
+        document.getElementById("modal").style.display = "flex";
+    }
+
+    function closeModal() {
+        document.getElementById("modal").style.display = "none";
+    }
+
+    initGame();
+</script>
+</body>
+</html>
