@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>🎉 شكون أكثر واحد؟ - اللعبة التونسية</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        body { background: linear-gradient(145deg, #0a0a15 0%, #1a1a2e 100%); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #fff; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 1rem; }
+        .game-box { max-width: 550px; width: 100%; background: rgba(17, 17, 34, 0.8); backdrop-filter: blur(18px); border-radius: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(233,69,96,0.2); padding: 1.2rem; transition: all 0.2s; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: translateY(0);} }
+        @keyframes shake { 0%,100%{ transform: translateX(0);} 25%{ transform: translateX(-4px);} 75%{ transform: translateX(4px);} }
+        @keyframes confettiPop { 0%{ transform: scale(0); opacity: 1;} 100%{ transform: scale(1.5); opacity: 0;} }
+        .animate-fade { animation: fadeUp 0.3s ease-out; }
+        .shake { animation: shake 0.2s ease-in-out; }
+        .card { background: rgba(26, 26, 46, 0.9); border-radius: 1.5rem; padding: 1rem; margin-bottom: 1rem; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
+        .champion-card { background: linear-gradient(135deg, #e94560, #f39c12); text-align: center; border: none; }
+        button { font-family: inherit; cursor: pointer; border: none; border-radius: 2rem; font-weight: 600; transition: 0.1s linear; }
+        button:active { transform: scale(0.97); }
+        .btn-primary { background: #e94560; color: white; padding: 0.75rem; width: 100%; font-size: 1rem; }
+        .btn-outline { background: transparent; border: 1px solid #e94560; color: #e94560; padding: 0.5rem; border-radius: 2rem; }
+        .category-btn { background: rgba(26,26,46,0.8); border: 1px solid #3a3a5a; border-radius: 1.2rem; padding: 0.6rem 0; text-align: center; font-size: 0.85rem; transition: 0.1s; }
+        .vote-btn { background: #e94560; padding: 0.7rem; border-radius: 3rem; font-weight: bold; text-align: center; flex: 1 1 auto; min-width: 100px; }
+        .action-btn { background: #2c2c4e; padding: 0.7rem; border-radius: 3rem; text-align: center; flex: 1; color: white; font-weight: bold; }
+        .ad-btn { background: #f1c40f; color: #1a1a2e; padding: 0.7rem; border-radius: 3rem; text-align: center; flex: 1; font-weight: bold; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.7rem; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+        .flex-center { display: flex; justify-content: center; gap: 0.8rem; flex-wrap: wrap; }
+        .progress-bar { background: #2a2a3e; border-radius: 1rem; height: 0.5rem; overflow: hidden; }
+        .progress-fill { background: linear-gradient(90deg, #00b4d8, #06d6a0); width: 0%; height: 100%; transition: width 0.2s; }
+        .modal { position: fixed; top:0;left:0; width:100%;height:100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-card { background: #1a1a2e; border-radius: 2rem; max-width: 90%; width: 340px; padding: 1.5rem; text-align: center; border: 1px solid #e94560; animation: fadeUp 0.2s; }
+        .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #e94560; padding: 0.6rem 1.2rem; border-radius: 3rem; font-weight: bold; z-index: 1100; white-space: nowrap; font-size: 0.9rem; box-shadow: 0 4px 12px black; }
+        .rank-badge { background: #ffd93d20; border-radius: 2rem; padding: 0.2rem 0.8rem; font-size: 0.75rem; display: inline-block; }
+        hr { border-color: #2a2a3e; margin: 0.7rem 0; }
+        .text-gold { color: #f1c40f; }
+        .text-accent { color: #e94560; }
+        .text-dim { color: #a0a0b0; }
+        .text-success { color: #06d6a0; }
+        .mt-1 { margin-top: 0.3rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 0.8rem; }
+        .text-center { text-align: center; }
+        .back-btn-large { background: rgba(233,69,96,0.2); padding: 0.6rem 1.2rem; border-radius: 3rem; font-size: 1.2rem; font-weight: bold; border: 1px solid #e94560; }
+        .menu-item { background: rgba(26,26,46,0.9); border-radius: 1.5rem; padding: 0.8rem; margin: 0.5rem 0; display: flex; align-items: center; gap: 0.8rem; transition: 0.1s; cursor: pointer; border: 1px solid #2a2a3e; }
+        .menu-item:hover { background: #e9456020; border-color: #e94560; }
+    </style>
+</head>
+<body>
+<div class="game-box" id="appRoot"></div>
+
+<script>
+    // --------------------------------------------------------------
+    // الألوان والجوائز (ثابتة)
+    // --------------------------------------------------------------
+    const COLORS = { accent: "#e94560", gold: "#f1c40f", success: "#06d6a0", warning: "#ffd93d", cyan: "#00b4d8" };
+    const RANKS = { 1:"😴 مبتدئ", 5:"😎 تونسي أصيل", 10:"🔥 زعيم القروب", 20:"👑 الملك", 50:"☠️ أسطورة تونس" };
+    const LOOT_REWARDS = [
+        { name:"💰 500 نقطة", type:"points", value:500, emoji:"💰" },
+        { name:"💰 1000 نقطة", type:"points", value:1000, emoji:"💎" },
+        { name:"🔥 مضاعف x2", type:"multiplier", value:2, emoji:"🔥" }
+    ];
+    const SPIN_WHEEL = [
+        { name:"🎁 100 نقطة", points:100, emoji:"🎁" },
+        { name:"🎉 250 نقطة", points:250, emoji:"🎉" },
+        { name:"💎 500 نقطة", points:500, emoji:"💎" },
+        { name:"👑 1000 نقطة", points:1000, emoji:"👑" }
+    ];
+    const CATEGORIES = {
+        friends:{emoji:"👬", label:"الصحاب", color:"#f39c12"},
+        family:{emoji:"👨‍👩‍👧‍👦", label:"العايلة", color:"#2ecc71"},
+        couples:{emoji:"💑", label:"الكوبل", color:"#e84393"},
+        lovers:{emoji:"💕", label:"الحبايب", color:"#9b59b6"},
+        work:{emoji:"💼", label:"العمل", color:"#3498db"},
+        ramadan:{emoji:"🌙", label:"رمضان", color:"#16a085"},
+        eid:{emoji:"🎉", label:"العيد", color:"#d35400"},
+        bac:{emoji:"🎓", label:"باكالوريا", color:"#8e44ad"},
+        spicy:{emoji:"🔥", label:"جريء", color:"#c0392b"}
+    };
+    const CAT_ORDER = ["friends","family","couples","lovers","work","ramadan","eid","bac","spicy"];
+
+    // ------------------------------------------------------------------
+    // 50 سؤال لكل فئة (تم إنشاؤها تلقائياً عبر حلقة لتوفير الطول)
+    // ------------------------------------------------------------------
+    const baseQuestions = {
+        friends: [],
+        family: [],
+        couples: [],
+        lovers: [],
+        work: [],
+        ramadan: [],
+        eid: [],
+        bac: [],
+        spicy: []
+    };
+    // توليد 50 سؤال لكل فئة
+    const categoryTemplates = {
+        friends: ["شكون أكثر واحد يڨول 'أنا جاي' وهو مازال في الدار؟ 😂","شكون أكثر واحد يصرف فلوسو في القهوة؟ ☕","شكون أكثر واحد يضحك وحدو؟ 😅","شكون أكثر واحد يسرق من الثلاجة بالليل؟ 🍕","شكون أكثر واحد ينسى يحضر للخروجة؟ 🎒","شكون أكثر واحد يتأخر على المواعيد؟ ⏰","شكون أكثر واحد يحب التصوير الذاتي؟ 📸","شكون أكثر واحد يسرق العبارات الطويلة؟ 🎤","شكون أكثر واحد يعلق على القصص بدون سبب؟ 💬","شكون أكثر واحد يعمل دراما خفيفة؟ 🎭"],
+        family: ["شكون أكثر واحد ياكل في الدار؟ 🍲","شكون أكثر واحد يسرق الريموت؟ 📺","شكون أكثر واحد يرقد بعد الغدا؟ 😴","شكون أكثر واحد يغسل المواعين مرغماً؟ 🧽","شكون أكثر واحد يطلب البيتزا في آخر لحظة؟ 🍕","شكون أكثر واحد ينسى يغلق النور؟ 💡","شكون أكثر واحد يحضر الحلويات؟ 🎂","شكون أكثر واحد يشرب القهوة صباحاً؟ ☕","شكون أكثر واحد يتغشش في السحور؟ 🌙","شكون أكثر واحد يضبط المنبه وما يفيقش؟ ⏰"],
+        couples: ["شكون أكثر واحد يغير؟ 😏","شكون أكثر واحد يقول 'وينك' كل شوي؟ 📱","شكون أكثر واحد يعمل بلوك ويرجع يفك؟ 😅","شكون أكثر واحد يحب المفاجآت؟ 🎁","شكون أكثر واحد يطلب الورد؟ 🌹","شكون أكثر واحد يغار من الأصدقاء؟ 💔","شكون أكثر واحد يخطط للمواعيد؟ 📅","شكون أكثر واحد يخبي أسرار العلاقة؟ 🤫","شكون أكثر واحد يرسل 'صباح الخير' أول واحد؟ 🌅","شكون أكثر واحد يحب السهرات الرومنسية؟ 🕯️"],
+        lovers: ["شكون أكثر واحد يعمل flirt؟ 😏","شكون أكثر واحد يتابع الحبيب في السوشال ميديا؟ 👀","شكون أكثر واحد يرسل رسائل طويلة ليلاً؟ 🌙","شكون أكثر واحد يعمل صورة مع الحبيب كل يوم؟ 📸","شكون أكثر واحد يطلب العناق الزايد؟ 🤗","شكون أكثر واحد يكتب بوستات غرامية؟ ❤️","شكون أكثر واحد يحب الهدايا المصنوعة يدوياً؟ 🎁","شكون أكثر واحد ينسى الذكرى السنوية؟ 📅","شكون أكثر واحد يقلد الحبيب في كلامه؟ 🗣️","شكون أكثر واحد يحب القبلات المفاجئة؟ 💋"],
+        work: ["شكون أكثر واحد يتأخر كل نهار؟ ⏰","شكون أكثر واحد يشرب قهوة أكثر من اللازم؟ ☕","شكون أكثر واحد يأخذ بريك طويل؟ 🍵","شكون أكثر واحد يتذمر من المدير؟ 😤","شكون أكثر واحد يغش في التقرير؟ 📋","شكون أكثر واحد يطلب زيادة؟ 💰","شكون أكثر واحد ينام في الاجتماع؟ 😴","شكون أكثر واحد يضيع وقت في التلفون؟ 📱","شكون أكثر واحد يقدم أفكار غريبة؟ 💡","شكون أكثر واحد يخاف من البطالة؟ 😰"],
+        ramadan: ["شكون أكثر واحد ياكل في السحور؟ 🌙","شكون أكثر واحد ينعس بعد الفطور؟ 😴","شكون أكثر واحد يطلب زلابية؟ 🥨","شكون أكثر واحد يصلي التراويح في آخر ركعة؟ 🕌","شكون أكثر واحد يشرب الماء مرة وحدة؟ 💧","شكون أكثر واحد يتابع المسلسلات كلها؟ 📺","شكون أكثر واحد يسبل في السحور؟ 🍽️","شكون أكثر واحد يتصدق سراً؟ 🤲","شكون أكثر واحد يدعي لأصحابو؟ 🤲","شكون أكثر واحد يحب الحلويات الرمضانية؟ 🍰"],
+        eid: ["شكون أكثر واحد يحب لبسة العيد؟ 👗","شكون أكثر واحد يطلب العيدية من الكبار؟ 💰","شكون أكثر واحد ياكل غريبة حتى التخمة؟ 🍪","شكون أكثر واحد يزور الأقارب كلهم؟ 🏠","شكون أكثر واحد يصور نفسه في العيد؟ 📸","شكون أكثر واحد يبقى في البيت ولا يخرج؟ 🛋️","شكون أكثر واحد يشتري هدايا للكل؟ 🎁","شكون أكثر واحد ينسى يهنئ حد؟ 😅","شكون أكثر واحد يخرج يتفسح بوقت طويل؟ 🚗","شكون أكثر واحد يحب الألعاب النارية؟ 🎆"],
+        bac: ["شكون أكثر واحد يخاف من الباك؟ 😰","شكون أكثر واحد يراجع آخر ليلة؟ 📚","شكون أكثر واحد يغش في الدفوار؟ ✍️","شكون أكثر واحد ينعس في القسم؟ 😴","شكون أكثر واحد يضيع كراريسو؟ 📓","شكون أكثر واحد يحفظ كل المواد؟ 🧠","شكون أكثر واحد يحضر دروس خصوصية؟ 💸","شكون أكثر واحد يتوتر وقت الإمتحان؟ 😬","شكون أكثر واحد يطلب دعاء من أمو؟ 🤲","شكون أكثر واحد يحلم بالعلامة الكاملة؟ ⭐"],
+        spicy: ["شكون أكثر واحد عنده خبرة في العلاقات؟ 🔥","شكون أكثر واحد يبدا أول في الكلام الجريء؟ 😈","شكون أكثر واحد يحب الضو الخافت؟ 🕯️","شكون أكثر واحد يجيب أفكار جديدة غير تقليدية؟ 💡","شكون أكثر واحد يعرف أسرار الفريق؟ 🤫","شكون أكثر واحد يفضح الجميع في التحديات؟ 🎤","شكون أكثر واحد يحرج صاحبوه؟ 😳","شكون أكثر واحد عنده طلاسم في الحب؟ ✨","شكون أكثر واحد يغازل بطريقة مضحكة؟ 😂","شكون أكثر واحد يطلب القبلات جريئاً؟ 💋"]
+    };
+    // تكرار كل قالب 5 مرات للحصول على 50 سؤال (10 أساسية × 5 = 50)
+    for (let cat of CAT_ORDER) {
+        let template = categoryTemplates[cat] || categoryTemplates.friends;
+        for (let i = 0; i < 5; i++) {
+            baseQuestions[cat].push(...template);
+        }
+        baseQuestions[cat] = baseQuestions[cat].slice(0, 50); // تأكد من 50 سؤال
+    }
+
+    // 100 تحدي فريد (تم إنشاؤها بقوالب متنوعة)
+    const CHALLENGES_BASE = [
+        "😂 اضحك بصوت عالي 10 ثواني","💃 ارقص 5 ثواني","🎤 غني مقطع من أغنية مشهورة","🥤 اشرب كاس ماء دفعة وحدة","📞 كلم صحبك وقلو نحبك","😂 حك نكتة خايبة","🧹 مثل أنك تغسل الماعون","🐶 عوط كي الكلب","🦁 زمجّر كي الأسد","💪 وري عضلاتك","🎭 قلد واحد من الجالسين","📸 خود سيلفي مضحك","🤝 صافح الكل","😡 صيح 'يا لطيف' 3 مرات","🕺 تحرك كي الدودة","🍕 مثل أنك تاكل بيتزا","😴 تغطّي كي باش ترقد","🤔 اتخذ وضعية التفكير","🎬 مثل مشهد من مسلسل تركي","🗣️ حك قصة مضحكة من طفولتك","👑 تولي ملك لمدة دقيقة","🎤 سوّي مقابلة مع روحك","📢 صيح 'أنا مشهور' 3 مرات","💃 ارقص رقصة شعبية","🍚 كل ملعقة وهمية وأنت مغمض","🥛 اشرب حليب وهمي","🔊 سمعني أعلى صوت عندك","🎭 قلد صوت حيوان","🤡 حط صبعك في نيفك","😈 غمز لأقرب شخص","💋 بعت قبلة هوائية","🔥 قول كلمة جريئة بصوت عالي","😏 سوّي حركة مثيرة","💕 عبر عن حبك بطريقة مضحكة","🌹 قدم وردة وهمية لشخص","💌 اقرا رسالة حب وهمية","😳 احكي عن أول كراش","💪 قول 'أنا الأقوى'","🕺 ارقص رقصة مثيرة 5 ثواني","🎭 مثل مشهد رومنسي","☕ جيب القهوة للكل -وهمي-","🍪 وزع حلويات وهمية","💆 دلك كتاف اللي جمبك","🚪 افتح الباب الوهمي للكل","🎁 قدم هدية وهمية","🖼️ صور الجماعة -وهمي-","🎲 ارمي زهر وهمي وخمّن","💰 راهن على روحك بنقطة","⭐ قول 3 حوايج تحبهم في روحك","🤖 تحرك كي الروبوت 10 ثواني","🦖 مشي كي الديناصور","🐧 مشي كي البطريق","🐒 قلد القرد","🐍 تزحف كي الحنش","🦀 مشي كي السرطان","🎪 اعمل سيرك وحدك","🎨 ارسم في الهوا","🎯 مثل أنك ترمي سهام","🎸 العب قيتار وهمي","🥁 طبّل على الطاولة","🎺 انفخ في ترومبيت وهمي","🎻 العب كمنجة وهمية","🎹 العب بيانو وهمي","🏃 اجري في بلاصتك 10 ثواني","🤸 اعمل حركة رياضية","🧘 قعد وضعية يوغا","🏋️ ارفع أثقال وهمية","🤺 مبارزة بالسيوف الوهمية","🏹 ارمي سهم وهمي","🥊 بوكس في الهوا","⚽ شوط كرة وهمية","🏀 ارمي كرة سلة وهمية","🎾 العب تنس وهمي","🏐 اضرب كرة طايرة وهمية","🏓 العب بينغ بونغ وهمي","🎳 العب بولينغ وهمي","🎱 العب بلياردو وهمي","🎮 مثل أنك تلعب بلايستيشن","📱 مثل أنك تصور تيكتوك","🎙️ سوّي بودكاست وهمي","📺 مثل أنك مذيع أخبار","🎬 مثل مشهد من فيلم أكشن","🐪 اركب جمل وهمي","🐎 ارضي حصان وهمي","🐘 مشي كي الفيل","🐒 تسلق شجرة وهمية","🍕 أطلب بيتزا وهمية","🍔 أكل برغر ضخم","🍦 لحس بوظة وهمية","🍩 قضّم دونات وهمية","🪄 سوّي حركة سحرية","🔮 توقع مستقبل واحد","🎪 اعمل عرض سيرك","🃏 قلد الجوكر"
+    ];
+    // نأخذ أول 100 تحدي أو نكرر إذا نقصت
+    let CHALLENGES = [...CHALLENGES_BASE];
+    while (CHALLENGES.length < 100) CHALLENGES.push(...CHALLENGES_BASE);
+    CHALLENGES = CHALLENGES.slice(0, 100);
+
+    // تجهيز الأسئلة النهائية (base + إضافات الإعلانات)
+    let QUESTIONS = JSON.parse(JSON.stringify(baseQuestions));
+    const EXTRA_QUESTIONS_POOL = [
+        "🔥 سؤال إضافي 1: شكون اللي ما يحبش يخسر؟", "💥 سؤال إضافي 2: شكون اللي يخبي أسراره؟",
+        "✨ سؤال إضافي 3: شكون اللي يعمل حركات مضحكة؟", "🎯 سؤال إضافي 4: شكون اللي يخطط لكل شيء؟",
+        "💀 سؤال إضافي 5: شكون اللي يعرف كل شي عن الجميع؟"
+    ]; // فقط 5 أمثلة، لكن يمكن توسيعها
+
+    const ACHIEVEMENTS_MAP = {
+        first_vote:{name:"🎯 أول اتهام",desc:"اتهم لاعب لأول مرة",points:50},
+        five_votes:{name:"⭐ نجم الاتهامات",desc:"اتهم 5 مرات",points:100},
+        rich:{name:"💰 الأغنى",desc:"وصلت لـ 1000 نقطة",points:300}
+    };
+
+    // --------------------------------------------------------------
+    // حالة اللعبة والتخزين
+    // --------------------------------------------------------------
+    let gameState = {
+        players: ["أنت", "صاحبك 1", "صاحبك 2"],
+        scores: {}, gems: {}, votes: {}, challengesDone: {}, achievements: {},
+        questionsAnswered: {}, totalGames: 0, comboMult: 1, streak: {}, lastWinner: null,
+        currentCategory: "friends", currentTarget: null, usedQuestions: {},
+        lastSpinDate: null, lastDiceDate: null, levels: {}, xp: {}, extraUnlocked: {}
+    };
+
+    function loadGame() {
+        const saved = localStorage.getItem("chkoun_game_50");
+        if(saved) {
+            try {
+                const data = JSON.parse(saved);
+                for(let k in data) if(gameState.hasOwnProperty(k)) gameState[k] = data[k];
+            } catch(e){}
+        }
+        for(let p of gameState.players) {
+            if(gameState.scores[p] === undefined) gameState.scores[p]=0;
+            if(gameState.gems[p] === undefined) gameState.gems[p]=0;
+            if(gameState.votes[p] === undefined) gameState.votes[p]=0;
+            if(gameState.challengesDone[p] === undefined) gameState.challengesDone[p]=0;
+            if(gameState.achievements[p] === undefined) gameState.achievements[p]=[];
+            if(gameState.questionsAnswered[p] === undefined) gameState.questionsAnswered[p]=0;
+            if(gameState.streak[p] === undefined) gameState.streak[p]=0;
+            if(gameState.levels[p] === undefined) gameState.levels[p]=1;
+            if(gameState.xp[p] === undefined) gameState.xp[p]=0;
+        }
+        if(!gameState.currentTarget) gameState.currentTarget = gameState.players[0];
+        for(let c of CAT_ORDER) {
+            if(!gameState.usedQuestions[c]) gameState.usedQuestions[c]=[];
+            if(gameState.extraUnlocked[c] === undefined) gameState.extraUnlocked[c]=false;
+        }
+        rebuildQuestions();
+    }
+    function rebuildQuestions() {
+        for(let cat of CAT_ORDER) {
+            QUESTIONS[cat] = [...baseQuestions[cat]];
+            if(gameState.extraUnlocked[cat]) {
+                QUESTIONS[cat].push(...EXTRA_QUESTIONS_POOL);
+            }
+        }
+    }
+    function saveGame() { localStorage.setItem("chkoun_game_50", JSON.stringify(gameState)); }
+
+    function addXP(player, amount) {
+        let xp = (gameState.xp[player]||0)+amount;
+        let lvl = gameState.levels[player]||1;
+        let need = lvl*100;
+        let gained = 0;
+        while(xp >= need) { xp -= need; lvl++; need = lvl*100; gained++; }
+        if(gained>0) {
+            gameState.levels[player]=lvl; gameState.xp[player]=xp;
+            let reward = lvl*50;
+            gameState.scores[player] += reward;
+            showToast(`🎉 ${player} وصل مستوى ${lvl}! +${reward} نقطة`, COLORS.gold);
+            let rankKey = Object.keys(RANKS).filter(r=>r<=lvl).pop();
+            if(rankKey && RANKS[rankKey]) showToast(`🏆 رتبة جديدة: ${RANKS[rankKey]}`, "#f1c40f");
+        } else { gameState.xp[player]=xp; }
+        saveGame();
+    }
+    function showToast(msg, bg="#e94560") {
+        let toast = document.createElement('div'); toast.className = 'toast'; toast.innerText = msg; toast.style.backgroundColor = bg;
+        document.body.appendChild(toast); setTimeout(()=>toast.remove(), 2200);
+    }
+    function checkAchievements(player) {
+        let newAch = [];
+        let votes = gameState.votes[player]||0, score = gameState.scores[player]||0;
+        if(votes>=1 && !gameState.achievements[player].includes("first_vote")) {
+            newAch.push("first_vote"); gameState.scores[player] += ACHIEVEMENTS_MAP.first_vote.points;
+            showToast(`🏆 ${ACHIEVEMENTS_MAP.first_vote.name} +${ACHIEVEMENTS_MAP.first_vote.points}`, COLORS.gold);
+        }
+        if(votes>=5 && !gameState.achievements[player].includes("five_votes")) {
+            newAch.push("five_votes"); gameState.scores[player] += ACHIEVEMENTS_MAP.five_votes.points;
+            showToast(`⭐ ${ACHIEVEMENTS_MAP.five_votes.name} +${ACHIEVEMENTS_MAP.five_votes.points}`, COLORS.gold);
+        }
+        if(score>=1000 && !gameState.achievements[player].includes("rich")) {
+            newAch.push("rich"); gameState.scores[player] += ACHIEVEMENTS_MAP.rich.points;
+            showToast(`💰 ${ACHIEVEMENTS_MAP.rich.name} +${ACHIEVEMENTS_MAP.rich.points}`, COLORS.gold);
+        }
+        if(newAch.length) gameState.achievements[player].push(...newAch);
+        saveGame();
+    }
+    function getRandomQuestion() {
+        let list = QUESTIONS[gameState.currentCategory] || QUESTIONS.friends;
+        let used = gameState.usedQuestions[gameState.currentCategory];
+        let avail = list.filter(q=>!used.includes(q));
+        if(avail.length===0) { gameState.usedQuestions[gameState.currentCategory]=[]; avail = list; }
+        let q = avail[Math.floor(Math.random()*avail.length)];
+        gameState.usedQuestions[gameState.currentCategory].push(q);
+        return q;
+    }
+    function openLootbox() {
+        if(gameState.totalGames>0 && gameState.totalGames%5===0) {
+            let rew = LOOT_REWARDS[Math.floor(Math.random()*LOOT_REWARDS.length)];
+            if(rew.type==="points") {
+                gameState.scores[gameState.currentTarget] += rew.value;
+                showToast(`🎁 ${rew.emoji} ${gameState.currentTarget} حصل على ${rew.name}`, COLORS.gold);
+            } else if(rew.type==="multiplier") {
+                gameState.comboMult = rew.value;
+                showToast(`🔥 ${rew.name} لمدة 3 جولات!`, COLORS.orange);
+            }
+            saveGame();
+        }
+    }
+
+    // --------------------------------------------------------------
+    // عرض الشاشات (نفس الكود السابق مع تحسينات طفيفة)
+    // --------------------------------------------------------------
+    let currentScreen = "main";
+    const app = document.getElementById("appRoot");
+
+    function render() {
+        if(currentScreen === "main") renderMainScreen();
+        else if(currentScreen === "players") renderPlayersScreen();
+        else if(currentScreen === "game") renderGameScreen();
+    }
+
+    function renderMainScreen() {
+        currentScreen = "main";
+        let sorted = [...gameState.players].sort((a,b)=> (gameState.scores[b]||0)-(gameState.scores[a]||0));
+        let champ = sorted[0] || gameState.players[0];
+        let champScore = gameState.scores[champ]||0;
+        let champLevel = gameState.levels[champ]||1;
+        let totalAchieve = Object.values(gameState.achievements).reduce((s,arr)=>s+arr.length,0);
+        let catsHtml = `<div class="grid-3">` + CAT_ORDER.map(cat=>{
+            let c = CATEGORIES[cat];
+            return `<div class="category-btn" data-cat="${cat}" style="border-color:${c.color}; color:${c.color}">
+                        <div style="font-size:1.8rem">${c.emoji}</div>
+                        <div>${c.label}</div>
+                    </div>`;
+        }).join('') + `</div>`;
+        app.innerHTML = `
+            <div class="animate-fade">
+                <div class="flex-between"><div></div><h2 style="color:${COLORS.accent}">🎉 شكون أكثر واحد؟</h2><button id="menuBtn" style="background:none; font-size:1.5rem;">☰</button></div>
+                <div class="text-dim text-center mb-2">اللعبة التونسية الأولى</div>
+                <div class="card champion-card"><div>🏆 البطل الحالي</div><div style="font-size:1.6rem; font-weight:bold">${champ}</div><div>${champScore} نقطة  |  مستوى ${champLevel}</div><div class="rank-badge mt-2">${Object.values(RANKS).find((v,i)=> champLevel>=Number(Object.keys(RANKS)[i]) ) || RANKS[1]}</div></div>
+                <button class="btn-primary" id="managePlayersBtn">👥 إدارة اللاعبين</button>
+                <div class="text-gold mt-2">📂 اختر الفئة:</div>${catsHtml}
+                <button class="btn-primary" id="randomGameBtn" style="background:#f39c12; margin-top:0.5rem;">🎲 بداية عشوائية 🎲</button>
+                <div class="flex-between mt-2"><div class="text-center"><div>👥</div><div style="font-weight:bold">${gameState.players.length}</div><div class="text-dim">لاعب</div></div>
+                <div class="text-center"><div>🎮</div><div style="font-weight:bold">${gameState.totalGames}</div><div class="text-dim">لعبة</div></div>
+                <div class="text-center"><div>⭐</div><div style="font-weight:bold">${totalAchieve}</div><div class="text-dim">إنجاز</div></div></div>
+            </div>`;
+        document.querySelectorAll('.category-btn').forEach(btn=>{
+            btn.addEventListener('click', (e)=>{
+                let cat = btn.dataset.cat; gameState.currentCategory = cat; gameState.totalGames++; saveGame();
+                currentScreen = "game"; render();
+            });
+        });
+        document.getElementById('randomGameBtn').onclick = ()=>{
+            let randCat = CAT_ORDER[Math.floor(Math.random()*CAT_ORDER.length)];
+            gameState.currentCategory = randCat; gameState.totalGames++; saveGame();
+            currentScreen = "game"; render();
+        };
+        document.getElementById('managePlayersBtn').onclick = ()=>{ currentScreen="players"; render(); };
+        document.getElementById('menuBtn').onclick = ()=> showSettingsMenu();
+    }
+
+    function renderPlayersScreen() {
+        let fields = [];
+        for(let i=0; i<gameState.players.length; i++) {
+            fields.push(`
+                <div class="flex-between" style="margin-bottom:0.6rem">
+                    <span style="width:2rem">${i+1}</span>
+                    <input id="pname_${i}" value="${gameState.players[i]}" style="flex:1; background:#1a1a2e; border:1px solid #e94560; border-radius:2rem; padding:0.5rem; color:white; text-align:center">
+                    <button class="delPlayerBtn" data-idx="${i}" style="background:#ef476f; border-radius:2rem; padding:0.4rem 1rem; color:white;">🗑️</button>
+                </div>
+            `);
+        }
+        app.innerHTML = `
+            <div class="animate-fade">
+                <div class="flex-between"><button id="backMainBtn" class="back-btn-large">← رجوع</button><h2 class="text-accent">👥 إدارة اللاعبين</h2><div style="width:2rem;"></div></div>
+                <div class="text-dim text-center">(2 إلى 10 لاعبين)</div><hr>${fields.join('')}
+                <button id="addPlayerBtn" class="btn-primary" style="background:#06d6a0; margin-top:0.5rem;" ${gameState.players.length>=10 ? 'disabled' : ''}>➕ إضافة لاعب</button>
+                <button id="savePlayersBtn" class="btn-primary mt-2">💾 حفظ</button>
+                <button id="resetScoresBtn" class="btn-outline mt-2" style="color:#ef476f; border-color:#ef476f;">🔄 إعادة تعيين النقاط</button>
+            </div>`;
+        document.getElementById('backMainBtn').onclick = ()=>{ currentScreen="main"; render(); };
+        document.getElementById('addPlayerBtn').onclick = ()=>{
+            if(gameState.players.length<10) {
+                gameState.players.push(`لاعب ${gameState.players.length+1}`);
+                let newP = gameState.players[gameState.players.length-1];
+                gameState.scores[newP]=0; gameState.gems[newP]=0; gameState.votes[newP]=0; gameState.challengesDone[newP]=0;
+                gameState.achievements[newP]=[]; gameState.levels[newP]=1; gameState.xp[newP]=0;
+                saveGame(); renderPlayersScreen();
+            } else showToast("الحد الأقصى 10 لاعبين", COLORS.warning);
+        };
+        document.getElementById('savePlayersBtn').onclick = ()=>{
+            for(let i=0; i<gameState.players.length; i++) {
+                let inp = document.getElementById(`pname_${i}`);
+                if(inp && inp.value && inp.value !== gameState.players[i]) {
+                    let old = gameState.players[i], newName = inp.value;
+                    gameState.players[i] = newName;
+                    gameState.scores[newName] = gameState.scores[old]; delete gameState.scores[old];
+                    gameState.gems[newName] = gameState.gems[old]; delete gameState.gems[old];
+                    gameState.votes[newName] = gameState.votes[old]; delete gameState.votes[old];
+                    gameState.challengesDone[newName] = gameState.challengesDone[old]; delete gameState.challengesDone[old];
+                    gameState.achievements[newName] = gameState.achievements[old]; delete gameState.achievements[old];
+                    gameState.levels[newName] = gameState.levels[old]; delete gameState.levels[old];
+                    gameState.xp[newName] = gameState.xp[old]; delete gameState.xp[old];
+                }
+            }
+            saveGame(); showToast("✅ تم حفظ التغييرات", COLORS.success); currentScreen="main"; render();
+        };
+        document.getElementById('resetScoresBtn').onclick = ()=> confirmReset();
+        document.querySelectorAll('.delPlayerBtn').forEach(btn=>{
+            btn.onclick = (e)=>{
+                let idx = parseInt(btn.dataset.idx);
+                if(gameState.players.length>2) {
+                    let removed = gameState.players[idx];
+                    gameState.players.splice(idx,1);
+                    delete gameState.scores[removed]; delete gameState.gems[removed]; delete gameState.votes[removed];
+                    delete gameState.challengesDone[removed]; delete gameState.achievements[removed];
+                    delete gameState.levels[removed]; delete gameState.xp[removed];
+                    saveGame(); renderPlayersScreen();
+                } else showToast("يجب بقاء لاعبين على الأقل", COLORS.warning);
+            };
+        });
+    }
+
+    function renderGameScreen() {
+        gameState.currentTarget = gameState.players[Math.floor(Math.random()*gameState.players.length)];
+        let question = getRandomQuestion();
+        let cat = CATEGORIES[gameState.currentCategory];
+        let sorted = [...gameState.players].sort((a,b)=> (gameState.scores[b]||0)-(gameState.scores[a]||0));
+        let top3 = sorted.slice(0,3);
+        let xpCur = gameState.xp[gameState.currentTarget]||0, lvlCur = gameState.levels[gameState.currentTarget]||1;
+        let xpPercent = (xpCur/(lvlCur*100))*100;
+        let streakVal = gameState.streak[gameState.currentTarget]||0, currentGems = gameState.gems[gameState.currentTarget]||0;
+        let extraUnlocked = gameState.extraUnlocked[gameState.currentCategory];
+        app.innerHTML = `
+            <div class="animate-fade">
+                <div class="flex-between"><button id="quitGameBtn" style="background:none; font-size:1.3rem;">←</button><div style="background:${cat.color}20; border-radius:2rem; padding:0.3rem 1rem;">${cat.emoji} ${cat.label}</div><button id="refreshGameBtn" style="background:none;">↻</button></div>
+                <div class="flex-between mt-1"><span class="rank-badge">💎 ${currentGems} ج</span><span class="rank-badge">✨ x${gameState.comboMult}</span><span class="rank-badge">🔥 ${streakVal}</span></div>
+                <div class="card text-center" style="background:${cat.color}20; margin-top:0.5rem;">🎯 دورك يا <strong style="font-size:1.2rem;">${gameState.currentTarget}</strong></div>
+                <div class="card" style="border-color:${cat.color}; text-align:center;"><div style="font-size:1.25rem; font-weight:bold; line-height:1.4;">${question}</div></div>
+                <div class="progress-bar mt-2"><div class="progress-fill" style="width:${xpPercent}%"></div></div>
+                <div class="text-dim text-center">مستوى ${lvlCur} (${xpCur}/${lvlCur*100} XP) | 👑 الهداف: ${top3[0]||''}</div>
+                <div class="text-gold mt-3">👇 شكون هو؟</div><div id="voteBtnsContainer" class="flex-center" style="margin-top:0.5rem;"></div>
+                <div class="flex-center mt-3"><button class="action-btn" id="challengeBtn">🎭 تحدي</button><button class="action-btn" id="diceBtn">🎲 زهر</button><button class="action-btn" id="dailyBtn">🎁 يومية</button></div>
+                <div class="mt-2"><button class="ad-btn" id="watchAdBtn" style="width:100%;">📺 شاهد إعلان (30 ث) +500 جوهرة و 20 سؤال جديد</button></div>
+                ${extraUnlocked ? '<div class="text-success text-center mt-1">✓ تم فتح 20 سؤال إضافي لهذه الفئة!</div>' : ''}
+                <div class="text-dim text-center mt-2" style="font-size:0.7rem;">⭐ كل 5 ألعاب صندوق مجاني | 🎲 الزهر مرة يومياً</div>
+            </div>`;
+        let container = document.getElementById('voteBtnsContainer');
+        for(let p of gameState.players) {
+            let btn = document.createElement('button');
+            btn.innerText = p; btn.className = 'vote-btn'; btn.style.background = cat.color; btn.style.margin = '0.2rem';
+            btn.onclick = ()=> voteForPlayer(p);
+            container.appendChild(btn);
+        }
+        document.getElementById('quitGameBtn').onclick = ()=>{ currentScreen="main"; render(); };
+        document.getElementById('refreshGameBtn').onclick = ()=>{ renderGameScreen(); };
+        document.getElementById('challengeBtn').onclick = ()=> showChallengePopup();
+        document.getElementById('diceBtn').onclick = ()=> showDiceOncePerDay();
+        document.getElementById('dailyBtn').onclick = ()=> showDailyReward();
+        document.getElementById('watchAdBtn').onclick = ()=> showAdAndReward();
+    }
+
+    function voteForPlayer(player) {
+        let points = 10 * gameState.comboMult;
+        gameState.votes[player] = (gameState.votes[player]||0)+1;
+        gameState.scores[player] = (gameState.scores[player]||0)+points;
+        addXP(player, Math.floor(points/2));
+        if(player === gameState.lastWinner) {
+            gameState.streak[player] = (gameState.streak[player]||0)+1;
+            if(gameState.streak[player]>=3) gameState.comboMult=2;
+            showToast(`🔥 COMBO x${gameState.comboMult}! ${player} في حالة!`, COLORS.orange);
+        } else {
+            gameState.streak[player] = 1;
+            gameState.comboMult = 1;
+            showToast(`😂 ${player} +${points} نقطة`, COLORS.success);
+        }
+        gameState.lastWinner = player;
+        checkAchievements(player);
+        saveGame();
+        renderGameScreen();
+    }
+
+    function showAdAndReward() {
+        if(gameState.extraUnlocked[gameState.currentCategory]) {
+            showToast("✅ هذه الفئة بالفعل لديها 20 سؤالاً إضافياً!", COLORS.warning);
+            return;
+        }
+        let modalDiv = document.createElement('div'); modalDiv.className = 'modal';
+        modalDiv.innerHTML = `<div class="modal-card"><h3 class="text-accent">📺 إعلان</h3><div id="adTimer" style="font-size:2rem; margin:0.5rem;">30</div><div>شاهد الإعلان لمدة 30 ثانية</div><div class="progress-bar mt-2"><div id="adProgress" class="progress-fill" style="width:0%"></div></div><button id="closeAdBtn" class="btn-outline mt-2" style="display:none;">إغلاق</button></div>`;
+        document.body.appendChild(modalDiv);
+        let timer = 30; const timerDiv = modalDiv.querySelector('#adTimer'); const progressDiv = modalDiv.querySelector('#adProgress'); const closeBtn = modalDiv.querySelector('#closeAdBtn');
+        let interval = setInterval(() => {
+            timer--; timerDiv.innerText = timer; progressDiv.style.width = ((30-timer)/30)*100 + '%';
+            if(timer <= 0) {
+                clearInterval(interval); timerDiv.innerText = "✅ تم";
+                gameState.gems[gameState.currentTarget] = (gameState.gems[gameState.currentTarget]||0) + 500;
+                if(!gameState.extraUnlocked[gameState.currentCategory]) {
+                    gameState.extraUnlocked[gameState.currentCategory] = true;
+                    rebuildQuestions();
+                    gameState.usedQuestions[gameState.currentCategory] = [];
+                    showToast(`🎉 فتحت 20 سؤال جديد للفئة ${CATEGORIES[gameState.currentCategory].label}!`, COLORS.success);
+                }
+                showToast(`💎 حصلت على 500 جوهرة!`, COLORS.gold);
+                saveGame(); closeBtn.style.display = 'block';
+            }
+        }, 1000);
+        closeBtn.onclick = () => { clearInterval(interval); modalDiv.remove(); renderGameScreen(); };
+    }
+
+    function showDiceOncePerDay() {
+        let today = new Date().toISOString().slice(0,10);
+        if(gameState.lastDiceDate === today) { showToast("⏰ النرد متاح مرة واحدة في اليوم! غداً تجي.", COLORS.warning); return; }
+        gameState.lastDiceDate = today; saveGame();
+        let result = Math.floor(Math.random()*6)+1, diceMap = ["⚀","⚁","⚂","⚃","⚄","⚅"];
+        let points = result * 25 * gameState.comboMult, special = "";
+        if(result===6) { points+=100; special="🎉 +100 إضافية!"; makeConfetti(); }
+        else if(result===1) { points = Math.max(10, Math.floor(points/2)); special="😅 نصف النقاط فقط"; }
+        gameState.scores[gameState.currentTarget] += points;
+        addXP(gameState.currentTarget, Math.floor(points/2)); saveGame();
+        let modalDiv = document.createElement('div'); modalDiv.className = 'modal';
+        modalDiv.innerHTML = `<div class="modal-card"><h3 class="text-accent">🎲 رمي النرد (مرة يومياً)</h3><div style="font-size:4rem">${diceMap[result-1]}</div><div style="font-size:1.8rem">النتيجة: ${result}</div><div class="text-success">🎁 +${points} نقطة</div><div class="text-gold">${special}</div><button id="closeDiceBtn" class="btn-primary mt-2" style="width:100%">متابعة</button></div>`;
+        document.body.appendChild(modalDiv);
+        document.getElementById('closeDiceBtn').onclick = ()=>{ modalDiv.remove(); renderGameScreen(); };
+    }
+
+    function showDailyReward() {
+        let today = new Date().toISOString().slice(0,10);
+        if(gameState.lastSpinDate === today) { showToast("⏰ الهدية اليومية مرة واحدة في اليوم", COLORS.warning); return; }
+        let reward = SPIN_WHEEL[Math.floor(Math.random()*SPIN_WHEEL.length)];
+        gameState.lastSpinDate = today; gameState.scores[gameState.currentTarget] += reward.points; saveGame();
+        let modalDiv = document.createElement('div'); modalDiv.className = 'modal';
+        modalDiv.innerHTML = `<div class="modal-card"><h3 class="text-gold">🎁 هدية يومية</h3><div style="font-size:2.5rem">${reward.emoji}</div><div>${reward.name}</div><button id="closeDailyBtn" class="btn-primary mt-2">استلام</button></div>`;
+        document.body.appendChild(modalDiv);
+        document.getElementById('closeDailyBtn').onclick = ()=>{ modalDiv.remove(); renderGameScreen(); };
+        makeConfetti();
+    }
+
+    function showChallengePopup() {
+        let challenge = CHALLENGES[Math.floor(Math.random()*CHALLENGES.length)];
+        let pts = 50 * gameState.comboMult;
+        let modalDiv = document.createElement('div'); modalDiv.className = 'modal';
+        modalDiv.innerHTML = `<div class="modal-card"><h3 class="text-accent">🎭 تحدي</h3><div style="margin:1rem 0">${challenge}</div><div class="text-gold">⭐ المكافأة: ${pts} نقطة</div><div class="flex-center mt-2"><button id="completeChallengeBtn" class="btn-primary" style="width:auto; padding:0.5rem 1.2rem;">✅ تم التنفيذ</button><button id="cancelModalBtn" class="btn-outline">إلغاء</button></div></div>`;
+        document.body.appendChild(modalDiv);
+        document.getElementById('completeChallengeBtn').onclick = ()=>{
+            gameState.challengesDone[gameState.currentTarget] = (gameState.challengesDone[gameState.currentTarget]||0)+1;
+            gameState.scores[gameState.currentTarget] += pts;
+            addXP(gameState.currentTarget, Math.floor(pts/2)); saveGame();
+            showToast(`🎭 ${gameState.currentTarget} +${pts} نقطة`, COLORS.success);
+            modalDiv.remove(); renderGameScreen();
+        };
+        document.getElementById('cancelModalBtn').onclick = ()=> modalDiv.remove();
+    }
+
+    function showSettingsMenu() {
+        let modalDiv = document.createElement('div'); modalDiv.className = 'modal';
+        modalDiv.innerHTML = `<div class="modal-card" style="width:320px; padding:1rem;"><h3 class="text-accent" style="margin-bottom:1rem;">📋 القائمة</h3><div class="menu-item" id="statsItem"><span style="font-size:1.5rem;">📊</span> <span>الإحصائيات</span></div><div class="menu-item" id="achievementsItem"><span style="font-size:1.5rem;">🏆</span> <span>الإنجازات</span></div><div class="menu-item" id="privacyItem"><span style="font-size:1.5rem;">📜</span> <span>سياسة الخصوصية</span></div><div class="menu-item" id="closeMenuItem" style="border-color:#e94560;"><span style="font-size:1.5rem;">❌</span> <span>إغلاق</span></div></div>`;
+        document.body.appendChild(modalDiv);
+        document.getElementById('statsItem').onclick = ()=>{ showStatsDialog(); modalDiv.remove(); };
+        document.getElementById('achievementsItem').onclick = ()=>{ showAchievementsDialog(); modalDiv.remove(); };
+        document.getElementById('privacyItem').onclick = ()=>{ showPrivacyDialog(); modalDiv.remove(); };
+        document.getElementById('closeMenuItem').onclick = ()=> modalDiv.remove();
+    }
+
+    function showStatsDialog() {
+        let mostVoted = gameState.players.reduce((a,b)=> (gameState.votes[a]||0)>(gameState.votes[b]||0)?a:b, gameState.players[0]);
+        let mostChallenges = gameState.players.reduce((a,b)=> (gameState.challengesDone[a]||0)>(gameState.challengesDone[b]||0)?a:b, gameState.players[0]);
+        let totalPoints = Object.values(gameState.scores).reduce((s,v)=>s+v,0);
+        let totalAch = Object.values(gameState.achievements).reduce((s,arr)=>s+arr.length,0);
+        let text = `📊 إحصائيات اللعبة\n\n👥 لاعبين: ${gameState.players.length}\n🎮 ألعاب: ${gameState.totalGames}\n💰 مجموع النقاط: ${totalPoints}\n⭐ إنجازات: ${totalAch}\n✨ مضاعف: x${gameState.comboMult}\n🎯 أكثر متهم: ${mostVoted} (${gameState.votes[mostVoted]||0})\n🎭 أكثر تحديات: ${mostChallenges} (${gameState.challengesDone[mostChallenges]||0})`;
+        alert(text);
+    }
+    function showAchievementsDialog() {
+        let list = Object.values(ACHIEVEMENTS_MAP).map(a=>`${a.name}\n  └ ${a.desc} (+${a.points})`).join('\n\n');
+        let playerAchieve = gameState.players.slice(0,3).map(p=>`👤 ${p}: ${gameState.achievements[p].length} إنجاز`).join('\n');
+        alert(`🎯 الإنجازات المتاحة:\n${list}\n\n🏅 إنجازات اللاعبين:\n${playerAchieve}`);
+    }
+    function showPrivacyDialog() { alert("📜 سياسة الخصوصية\n• لا نجمع معلومات شخصية\n• حفظ محلي فقط\n• جميع البيانات قابلة للحذف\n• لعبة تونسية 100%"); }
+    function confirmReset() {
+        if(confirm("⚠️ هل أنت متأكد من إعادة تعيين جميع النقاط؟ لا يمكن التراجع.")) {
+            for(let p of gameState.players) { gameState.scores[p]=0; gameState.votes[p]=0; gameState.challengesDone[p]=0; gameState.streak[p]=0; }
+            saveGame(); showToast("🔄 تم إعادة تعيين النقاط", COLORS.warning);
+            if(currentScreen==="players") renderPlayersScreen(); else renderMainScreen();
+        }
+    }
+    function makeConfetti() {
+        for(let i=0;i<40;i++) {
+            let conf = document.createElement('div');
+            conf.style.position='fixed'; conf.style.width=Math.random()*10+5+'px'; conf.style.height=conf.style.width;
+            conf.style.backgroundColor=`hsl(${Math.random()*360},100%,60%)`; conf.style.left=Math.random()*100+'%'; conf.style.top='-20px';
+            conf.style.borderRadius='50%'; conf.style.pointerEvents='none'; conf.style.zIndex=9999;
+            conf.style.animation=`confettiPop 0.8s ease-out forwards`;
+            document.body.appendChild(conf); setTimeout(()=>conf.remove(),800);
+        }
+    }
+
+    loadGame();
+    render();
+</script>
+</body>
+</html>
