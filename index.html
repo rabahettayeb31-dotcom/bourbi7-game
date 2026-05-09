@@ -1,0 +1,2196 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔥 شكون أكثر واحد؟ - ULTRA</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050510;
+  --card: #0d0d20;
+  --card2: #12122a;
+  --accent: #ff2d55;
+  --cyan: #00f5ff;
+  --gold: #ffd700;
+  --purple: #b040ff;
+  --green: #00ff87;
+  --orange: #ff7c00;
+  --glow-accent: 0 0 20px #ff2d5580, 0 0 40px #ff2d5540;
+  --glow-cyan: 0 0 20px #00f5ff80, 0 0 40px #00f5ff40;
+  --glow-gold: 0 0 20px #ffd70080, 0 0 40px #ffd90050;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow-x:hidden;}
+body{
+  background:var(--bg);
+  font-family:'Tajawal',sans-serif;
+  color:#fff;
+  min-height:100vh;
+}
+
+/* ===== NOISE OVERLAY ===== */
+body::before{
+  content:'';
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.4;
+}
+
+/* ===== ANIMATED GRID BG ===== */
+body::after{
+  content:'';
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background-image:
+    linear-gradient(rgba(0,245,255,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,245,255,0.03) 1px,transparent 1px);
+  background-size:40px 40px;
+  animation:gridMove 20s linear infinite;
+  pointer-events:none;z-index:0;
+}
+@keyframes gridMove{from{background-position:0 0}to{background-position:40px 40px}}
+
+canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+
+#appRoot{
+  position:relative;z-index:2;
+  max-width:520px;width:100%;
+  margin:0 auto;
+  padding:1rem 0.8rem 5rem;
+  min-height:100vh;
+}
+
+/* ===== HEADER ===== */
+.top-header{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0.5rem 0 1rem;
+}
+.logo{
+  font-size:1.1rem;font-weight:900;
+  background:linear-gradient(90deg,var(--accent),var(--purple),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:logoShimmer 3s linear infinite;
+  background-size:200%;
+}
+@keyframes logoShimmer{0%{background-position:0%}100%{background-position:200%}}
+
+/* ===== CARDS ===== */
+.card{
+  background:var(--card);
+  border-radius:1.2rem;
+  padding:1rem;
+  margin-bottom:0.8rem;
+  border:1px solid rgba(255,255,255,0.07);
+  position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.03) 0%,transparent 60%);
+  pointer-events:none;
+}
+.card-glow-accent{border-color:var(--accent)40;box-shadow:var(--glow-accent);}
+.card-glow-cyan{border-color:var(--cyan)40;box-shadow:var(--glow-cyan);}
+.card-glow-gold{border-color:var(--gold)40;box-shadow:var(--glow-gold);}
+
+/* ===== CHAMPION BANNER ===== */
+.champ-banner{
+  background:linear-gradient(135deg,#1a0020,#200010,#0a1a30);
+  border:1px solid var(--gold)50;
+  border-radius:1.5rem;
+  padding:1rem;text-align:center;
+  box-shadow:var(--glow-gold);
+  position:relative;overflow:hidden;
+  margin-bottom:1rem;
+}
+.champ-banner::before{
+  content:'';position:absolute;top:-50%;left:-50%;
+  width:200%;height:200%;
+  background:conic-gradient(transparent 0deg,var(--gold)10 10deg,transparent 20deg);
+  animation:champSpin 8s linear infinite;
+  opacity:.15;
+}
+@keyframes champSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.champ-crown{font-size:2rem;animation:crownFloat 2s ease-in-out infinite;}
+@keyframes crownFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.champ-name{font-size:1.4rem;font-weight:900;color:var(--gold);}
+.champ-score{font-size:0.9rem;color:#aaa;}
+
+/* ===== CATEGORY BUTTONS ===== */
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;margin-bottom:1rem;}
+.cat-btn{
+  background:var(--card2);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:1rem;padding:0.7rem 0.3rem;
+  cursor:pointer;text-align:center;
+  transition:all .15s;font-family:'Tajawal',sans-serif;
+  color:white;position:relative;overflow:hidden;
+}
+.cat-btn:active{transform:scale(0.93);}
+.cat-btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.05),transparent);
+}
+.cat-btn .cat-emoji{font-size:1.6rem;display:block;margin-bottom:0.2rem;}
+.cat-btn .cat-label{font-size:0.78rem;font-weight:700;}
+.cat-btn:hover{transform:translateY(-2px);}
+.cat-btn.hot{animation:catPulse 1.5s ease-in-out infinite;}
+@keyframes catPulse{0%,100%{box-shadow:none}50%{box-shadow:0 0 15px currentColor}}
+
+/* ===== BUTTONS ===== */
+button{font-family:'Tajawal',sans-serif;cursor:pointer;border:none;font-weight:700;}
+button:active{transform:scale(0.95);}
+.btn-primary{
+  background:linear-gradient(135deg,var(--accent),#c0002a);
+  color:white;padding:0.8rem 1rem;
+  border-radius:3rem;width:100%;
+  font-size:1rem;font-weight:900;
+  box-shadow:var(--glow-accent);
+  transition:all .15s;margin-bottom:0.6rem;
+}
+.btn-primary:hover{box-shadow:0 0 30px #ff2d5560,0 0 60px #ff2d5530;}
+.btn-rand{
+  background:linear-gradient(135deg,var(--purple),#6000bb);
+  box-shadow:0 0 20px #b040ff60;
+}
+.btn-gold{
+  background:linear-gradient(135deg,var(--gold),#cc9900);
+  color:#000;box-shadow:var(--glow-gold);
+}
+
+/* ===== VOTE BUTTONS ===== */
+.vote-grid{display:grid;gap:0.5rem;margin:0.8rem 0;}
+.vote-btn{
+  padding:0.8rem 0.5rem;
+  border-radius:1rem;font-size:1rem;font-weight:900;
+  color:white;cursor:pointer;border:none;
+  position:relative;overflow:hidden;
+  transition:all .1s;
+  display:flex;align-items:center;justify-content:space-between;
+  padding-left:1rem;padding-right:1rem;
+}
+.vote-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);
+}
+.vote-btn:active{transform:scale(0.96);}
+.vote-btn .v-score{
+  background:rgba(0,0,0,0.3);
+  border-radius:2rem;padding:0.1rem 0.5rem;
+  font-size:0.75rem;
+}
+.vote-btn .v-streak{font-size:0.8rem;}
+
+/* ===== ACTION ROW ===== */
+.action-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin-bottom:0.6rem;}
+.action-card{
+  background:var(--card2);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:1rem;padding:0.7rem 0.3rem;
+  cursor:pointer;text-align:center;
+  transition:all .15s;font-family:'Tajawal',sans-serif;
+  color:white;
+}
+.action-card:active{transform:scale(0.92);}
+.action-card .a-icon{font-size:1.4rem;display:block;}
+.action-card .a-label{font-size:0.68rem;display:block;color:#aaa;margin-top:0.2rem;}
+.action-card:hover{background:rgba(255,255,255,0.07);}
+
+/* ===== QUESTION CARD ===== */
+.question-box{
+  background:linear-gradient(135deg,#0d0d25,#150d20);
+  border:1px solid var(--cyan)30;
+  border-radius:1.5rem;padding:1.2rem;
+  text-align:center;margin-bottom:0.8rem;
+  box-shadow:var(--glow-cyan);
+  min-height:90px;
+  display:flex;align-items:center;justify-content:center;
+}
+.question-text{
+  font-size:1.15rem;font-weight:700;
+  line-height:1.5;
+  animation:qFadeIn .3s ease-out;
+}
+@keyframes qFadeIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+
+/* ===== SLOT MACHINE REVEAL ===== */
+.slot-container{
+  height:70px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.slot-strip{
+  display:flex;flex-direction:column;
+  transition:transform 0.05s;
+  font-size:1.1rem;font-weight:700;
+  text-align:center;line-height:70px;
+}
+
+/* ===== TARGET CARD ===== */
+.target-card{
+  background:linear-gradient(135deg,rgba(255,45,85,0.15),rgba(176,64,255,0.15));
+  border:1px solid var(--accent)40;
+  border-radius:1.2rem;padding:0.7rem 1rem;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:0.8rem;
+}
+.target-name{font-size:1.3rem;font-weight:900;color:var(--accent);}
+.target-badge{
+  background:rgba(255,45,85,0.2);
+  border:1px solid var(--accent)40;
+  border-radius:2rem;padding:0.2rem 0.7rem;
+  font-size:0.75rem;
+}
+
+/* ===== STATS STRIP ===== */
+.stats-strip{
+  display:flex;gap:0.5rem;margin-bottom:0.8rem;
+}
+.stat-pill{
+  flex:1;background:var(--card2);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:0.8rem;padding:0.4rem;
+  text-align:center;
+}
+.stat-pill .s-val{font-size:1rem;font-weight:900;}
+.stat-pill .s-lbl{font-size:0.6rem;color:#666;}
+
+/* ===== XP BAR ===== */
+.xp-bar-wrap{margin-bottom:0.8rem;}
+.xp-label{display:flex;justify-content:space-between;font-size:0.72rem;color:#555;margin-bottom:0.25rem;}
+.xp-track{background:#0d0d20;border-radius:2rem;height:6px;overflow:hidden;border:1px solid rgba(255,255,255,0.05);}
+.xp-fill{
+  height:100%;border-radius:2rem;
+  background:linear-gradient(90deg,var(--purple),var(--cyan));
+  transition:width .4s cubic-bezier(.34,1.56,.64,1);
+  position:relative;
+}
+.xp-fill::after{
+  content:'';position:absolute;right:0;top:0;
+  width:6px;height:100%;
+  background:white;border-radius:50%;
+  box-shadow:0 0 8px white;
+}
+
+/* ===== LEADERBOARD ===== */
+.lb-row{
+  display:flex;align-items:center;gap:0.7rem;
+  padding:0.5rem 0;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  transition:all .3s;
+}
+.lb-rank{
+  font-size:1rem;font-weight:900;
+  width:2rem;text-align:center;
+}
+.lb-name{flex:1;font-weight:700;font-size:0.9rem;}
+.lb-score{
+  font-weight:900;font-size:0.9rem;
+  background:linear-gradient(135deg,var(--gold),var(--orange));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.lb-level{
+  font-size:0.7rem;color:#555;
+  background:rgba(255,255,255,0.05);
+  border-radius:2rem;padding:0.1rem 0.5rem;
+}
+
+/* ===== HOT BADGE ===== */
+.hot-badge{
+  background:linear-gradient(135deg,var(--accent),var(--orange));
+  border-radius:2rem;padding:0.15rem 0.5rem;
+  font-size:0.7rem;font-weight:900;
+  animation:hotPulse .8s ease-in-out infinite alternate;
+}
+@keyframes hotPulse{from{box-shadow:0 0 5px #ff2d55}to{box-shadow:0 0 15px #ff2d55,0 0 30px #ff7c0050}}
+
+/* ===== COMBO METER ===== */
+.combo-bar{
+  background:var(--card2);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:1rem;padding:0.6rem 1rem;
+  display:flex;align-items:center;gap:0.8rem;
+  margin-bottom:0.8rem;
+}
+.combo-fire{
+  font-size:1.5rem;
+  animation:fireWobble 0.5s ease-in-out infinite alternate;
+}
+@keyframes fireWobble{from{transform:rotate(-5deg) scale(1)}to{transform:rotate(5deg) scale(1.1)}}
+.combo-track{flex:1;background:#0d0d20;border-radius:2rem;height:8px;overflow:hidden;}
+.combo-fill{
+  height:100%;border-radius:2rem;
+  background:linear-gradient(90deg,#ff7c00,#ff2d55,#b040ff);
+  transition:width .3s;
+}
+.combo-text{font-size:0.8rem;font-weight:900;color:var(--gold);}
+
+/* ===== TIMER ===== */
+.timer-ring{
+  width:60px;height:60px;
+  position:relative;display:flex;align-items:center;justify-content:center;
+}
+.timer-ring svg{position:absolute;top:0;left:0;transform:rotate(-90deg);}
+.timer-ring .t-num{font-size:1.1rem;font-weight:900;z-index:1;}
+.timer-danger{color:var(--accent);animation:timerShake .3s ease-in-out infinite;}
+@keyframes timerShake{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+
+/* ===== RARITY COLORS ===== */
+.rarity-common{color:#aaa;}
+.rarity-rare{color:#00b4ff;}
+.rarity-epic{color:var(--purple);}
+.rarity-legendary{color:var(--gold);}
+.badge-legendary{
+  background:linear-gradient(135deg,#3d2a00,#5a3d00);
+  border:1px solid var(--gold)60;
+  border-radius:2rem;padding:0.15rem 0.6rem;
+  font-size:0.7rem;color:var(--gold);
+  box-shadow:var(--glow-gold);
+  animation:legendaryGlow 2s ease-in-out infinite;
+}
+@keyframes legendaryGlow{0%,100%{box-shadow:0 0 8px #ffd70080}50%{box-shadow:0 0 20px #ffd700,0 0 40px #ffd70060}}
+.badge-epic{background:linear-gradient(135deg,#1a0030,#2a005a);border:1px solid var(--purple)60;color:var(--purple);}
+.badge-rare{background:#001530;border:1px solid #00b4ff60;color:#00b4ff;}
+
+/* ===== EVENT CARD ===== */
+.event-card{
+  background:linear-gradient(135deg,rgba(255,215,0,0.1),rgba(255,124,0,0.1));
+  border:1px solid var(--gold)40;
+  border-radius:1.2rem;padding:0.8rem 1rem;
+  margin-bottom:0.8rem;
+  animation:eventPulse 1s ease-in-out infinite;
+  cursor:pointer;
+}
+@keyframes eventPulse{0%,100%{border-color:#ffd70040}50%{border-color:#ffd700;box-shadow:0 0 15px #ffd70040}}
+.event-icon{font-size:1.8rem;text-align:center;margin-bottom:0.3rem;}
+.event-title{font-weight:900;text-align:center;color:var(--gold);font-size:1rem;}
+.event-desc{text-align:center;font-size:0.8rem;color:#aaa;}
+
+/* ===== AD BUTTON ===== */
+.ad-btn{
+  background:linear-gradient(135deg,#1a1000,#2a1800);
+  border:1px solid var(--gold)40;
+  border-radius:1rem;padding:0.8rem 1rem;
+  color:var(--gold);font-weight:900;
+  width:100%;font-size:0.9rem;
+  display:flex;align-items:center;justify-content:center;gap:0.5rem;
+  cursor:pointer;font-family:'Tajawal',sans-serif;
+  transition:all .15s;margin-bottom:0.5rem;
+}
+.ad-btn:hover{box-shadow:var(--glow-gold);border-color:var(--gold)80;}
+
+/* ===== MODAL ===== */
+.modal{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);
+  display:flex;align-items:center;justify-content:center;z-index:100;
+  padding:1rem;
+}
+.modal-box{
+  background:linear-gradient(145deg,#0d0d20,#150d20);
+  border-radius:1.5rem;padding:1.5rem;
+  width:100%;max-width:360px;
+  border:1px solid rgba(255,255,255,0.1);
+  animation:modalIn .25s cubic-bezier(.34,1.56,.64,1);
+  position:relative;overflow:hidden;
+}
+.modal-box::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--purple),var(--cyan));
+}
+@keyframes modalIn{from{opacity:0;transform:scale(0.8) translateY(30px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+/* ===== SPIN WHEEL ===== */
+.wheel-container{
+  width:220px;height:220px;
+  position:relative;margin:0 auto;
+}
+.wheel-canvas{border-radius:50%;}
+.wheel-pointer{
+  position:absolute;top:50%;right:-15px;
+  transform:translateY(-50%);
+  font-size:1.5rem;
+}
+
+/* ===== TOAST ===== */
+.toast{
+  position:fixed;
+  top:1rem;left:50%;transform:translateX(-50%);
+  border-radius:3rem;font-weight:900;
+  z-index:999;white-space:nowrap;
+  font-size:0.9rem;padding:0.6rem 1.4rem;
+  font-family:'Tajawal',sans-serif;
+  animation:toastIn .3s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 4px 20px rgba(0,0,0,0.5);
+}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(-20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+/* ===== LEVEL UP OVERLAY ===== */
+.levelup-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.9);
+  display:flex;align-items:center;justify-content:center;
+  z-index:200;
+  animation:fadeIn .2s;
+}
+.levelup-box{
+  text-align:center;
+  animation:levelUpPop .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes levelUpPop{from{transform:scale(0)}to{transform:scale(1)}}
+.levelup-num{
+  font-size:8rem;font-weight:900;
+  background:linear-gradient(135deg,var(--gold),var(--orange),var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  line-height:1;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ===== JACKPOT FLASH ===== */
+.jackpot-flash{
+  position:fixed;inset:0;
+  background:radial-gradient(circle,rgba(255,215,0,0.3),transparent 70%);
+  pointer-events:none;z-index:50;
+  animation:jackpotFlash .6s ease-out forwards;
+}
+@keyframes jackpotFlash{0%{opacity:1}100%{opacity:0}}
+
+/* ===== MISSIONS ===== */
+.mission-item{
+  display:flex;align-items:center;gap:0.7rem;
+  padding:0.6rem 0;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.mission-progress{flex:1;height:5px;background:#1a1a30;border-radius:2rem;overflow:hidden;}
+.mission-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--green));border-radius:2rem;}
+.mission-reward{font-size:0.75rem;color:var(--gold);white-space:nowrap;}
+
+/* ===== PUNISHMENT CARD ===== */
+.punishment-card{
+  background:linear-gradient(135deg,rgba(255,45,85,0.2),rgba(255,0,0,0.1));
+  border:1px solid var(--accent)60;
+  border-radius:1.2rem;padding:0.8rem 1rem;
+  text-align:center;
+  animation:punishShake .3s ease-in-out 3;
+}
+@keyframes punishShake{0%,100%{transform:rotate(0)}25%{transform:rotate(-2deg)}75%{transform:rotate(2deg)}}
+
+/* ===== STREAK FLAMES ===== */
+.streak-display{display:flex;gap:0.2rem;flex-wrap:wrap;justify-content:center;}
+.flame{font-size:1rem;animation:flameBob 0.6s ease-in-out infinite alternate;}
+.flame:nth-child(even){animation-delay:0.3s;}
+@keyframes flameBob{from{transform:translateY(0) scale(1)}to{transform:translateY(-3px) scale(1.1)}}
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(5,5,16,0.95);
+  backdrop-filter:blur(20px);
+  border-top:1px solid rgba(255,255,255,0.06);
+  display:flex;justify-content:space-around;
+  padding:0.6rem 0 0.8rem;
+  z-index:10;
+}
+.nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:0.1rem;
+  cursor:pointer;padding:0.3rem 1rem;
+  transition:all .15s;color:#444;
+  font-family:'Tajawal',sans-serif;
+  border-radius:0.8rem;
+}
+.nav-item.active{color:var(--accent);}
+.nav-item.active .nav-icon{filter:drop-shadow(0 0 6px var(--accent));}
+.nav-icon{font-size:1.3rem;transition:transform .15s;}
+.nav-label{font-size:0.6rem;font-weight:700;}
+.nav-item:active .nav-icon{transform:scale(0.85);}
+.notif-dot{
+  position:absolute;top:-2px;right:-2px;
+  width:8px;height:8px;
+  background:var(--accent);border-radius:50%;
+  animation:notifPulse 1s ease-in-out infinite;
+}
+@keyframes notifPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--accent)40;border-radius:2px;}
+
+/* ===== ELIMINATION ===== */
+.elim-badge{
+  background:linear-gradient(135deg,#200000,#400000);
+  border:1px solid #ff000060;
+  border-radius:0.6rem;
+  font-size:0.65rem;padding:0.1rem 0.4rem;color:#ff4444;
+}
+
+/* ===== GLOW TEXT ===== */
+.glow-text-accent{text-shadow:0 0 10px var(--accent),0 0 20px var(--accent)60;}
+.glow-text-gold{text-shadow:0 0 10px var(--gold),0 0 20px var(--gold)60;}
+.glow-text-cyan{text-shadow:0 0 10px var(--cyan),0 0 20px var(--cyan)60;}
+
+/* ===== PULSE RING ===== */
+@keyframes pulseRing{0%{transform:scale(1);opacity:1}100%{transform:scale(2);opacity:0}}
+.pulse-ring{
+  width:40px;height:40px;border-radius:50%;
+  border:2px solid var(--accent);
+  animation:pulseRing 1s ease-out infinite;
+  position:absolute;
+}
+
+/* Utils */
+.flex-c{display:flex;align-items:center;justify-content:center;}
+.flex-b{display:flex;align-items:center;justify-content:space-between;}
+.text-center{text-align:center;}
+.mt1{margin-top:0.4rem;}.mt2{margin-top:0.8rem;}.mt3{margin-top:1.2rem;}
+.mb1{margin-bottom:0.4rem;}.mb2{margin-bottom:0.8rem;}
+.text-dim{color:#555;font-size:0.8rem;}
+.text-gold{color:var(--gold);}
+.text-accent{color:var(--accent);}
+.text-cyan{color:var(--cyan);}
+.text-green{color:var(--green);}
+.bold{font-weight:900;}
+.section-title{
+  font-size:0.75rem;font-weight:900;color:#444;letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:0.5rem;
+}
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div id="appRoot"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// 🎮 PARTICLE ENGINE
+// ══════════════════════════════════════════════════════════
+const pCanvas = document.getElementById('particles');
+const pCtx = pCanvas.getContext('2d');
+let pParticles = [];
+function resizeCanvas(){pCanvas.width=window.innerWidth;pCanvas.height=window.innerHeight;}
+resizeCanvas();window.addEventListener('resize',resizeCanvas);
+
+class Particle{
+  constructor(x,y,color,type='circle'){
+    this.x=x||Math.random()*pCanvas.width;
+    this.y=y||Math.random()*pCanvas.height;
+    this.vx=(Math.random()-0.5)*(type==='burst'?8:0.3);
+    this.vy=(Math.random()-0.5)*(type==='burst'?8:0.3)-(type==='burst'?3:0);
+    this.alpha=type==='burst'?1:Math.random()*0.4+0.1;
+    this.size=type==='burst'?Math.random()*6+3:Math.random()*2+0.5;
+    this.color=color||`hsl(${Math.random()*360},100%,70%)`;
+    this.gravity=type==='burst'?0.15:0;
+    this.life=1;this.decay=type==='burst'?0.02:0.003;this.type=type;
+  }
+  update(){
+    this.x+=this.vx;this.y+=this.vy;
+    this.vy+=this.gravity;
+    this.life-=this.decay;this.alpha=this.life;
+  }
+  draw(){
+    pCtx.save();pCtx.globalAlpha=this.alpha;
+    pCtx.fillStyle=this.color;
+    pCtx.beginPath();pCtx.arc(this.x,this.y,this.size,0,Math.PI*2);
+    pCtx.fill();pCtx.restore();
+  }
+}
+
+function spawnBurst(x,y,count=40,colors=['#ff2d55','#ffd700','#00f5ff','#b040ff']){
+  for(let i=0;i<count;i++){
+    pParticles.push(new Particle(x,y,colors[Math.floor(Math.random()*colors.length)],'burst'));
+  }
+}
+
+// Ambient particles
+for(let i=0;i<30;i++) pParticles.push(new Particle());
+
+function animateParticles(){
+  requestAnimationFrame(animateParticles);
+  pCtx.clearRect(0,0,pCanvas.width,pCanvas.height);
+  pParticles=pParticles.filter(p=>p.life>0);
+  while(pParticles.filter(p=>p.type==='circle').length<30){
+    pParticles.push(new Particle());
+  }
+  pParticles.forEach(p=>{p.update();p.draw();});
+}
+animateParticles();
+
+// ══════════════════════════════════════════════════════════
+// 🔊 WEB AUDIO ENGINE
+// ══════════════════════════════════════════════════════════
+let audioCtx=null;
+function getAudio(){
+  if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  return audioCtx;
+}
+function playTone(freq,dur,type='sine',vol=0.3){
+  try{
+    const ac=getAudio();
+    const o=ac.createOscillator();const g=ac.createGain();
+    o.connect(g);g.connect(ac.destination);
+    o.type=type;o.frequency.value=freq;
+    g.gain.setValueAtTime(vol,ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+dur);
+    o.start();o.stop(ac.currentTime+dur);
+  }catch(e){}
+}
+function playVote(){playTone(440,.1);setTimeout(()=>playTone(660,.15),100);}
+function playLevelUp(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>playTone(f,.2,'triangle',0.4),i*120));}
+function playJackpot(){[261,329,392,523,659].forEach((f,i)=>setTimeout(()=>playTone(f,.15,'square',0.25),i*80));}
+function playDice(){playTone(330,.05,'sawtooth');setTimeout(()=>playTone(220,.1,'sawtooth'),60);}
+function playClick(){playTone(800,.05,'sine',0.1);}
+
+// ══════════════════════════════════════════════════════════
+// 📊 GAME DATA
+// ══════════════════════════════════════════════════════════
+const RANKS={1:"😴 مبتدئ",3:"😎 أصيل",7:"🔥 زعيم",12:"👑 ملك",20:"☠️ أسطورة",35:"💀 خرافة"};
+const CATS={
+  friends:{emoji:"👬",label:"الصحاب",color:"#f39c12",gradient:"linear-gradient(135deg,#f39c12,#e67e22)"},
+  family:{emoji:"👨‍👩‍👧‍👦",label:"العايلة",color:"#2ecc71",gradient:"linear-gradient(135deg,#2ecc71,#27ae60)"},
+  couples:{emoji:"💑",label:"الكوبل",color:"#e84393",gradient:"linear-gradient(135deg,#e84393,#c0392b)"},
+  lovers:{emoji:"💕",label:"الحبايب",color:"#9b59b6",gradient:"linear-gradient(135deg,#9b59b6,#6c3483)"},
+  work:{emoji:"💼",label:"العمل",color:"#3498db",gradient:"linear-gradient(135deg,#3498db,#2980b9)"},
+  ramadan:{emoji:"🌙",label:"رمضان",color:"#1abc9c",gradient:"linear-gradient(135deg,#1abc9c,#16a085)"},
+  eid:{emoji:"🎉",label:"العيد",color:"#e67e22",gradient:"linear-gradient(135deg,#e67e22,#d35400)"},
+  bac:{emoji:"🎓",label:"باكالوريا",color:"#8e44ad",gradient:"linear-gradient(135deg,#8e44ad,#6c3483)"},
+  spicy:{emoji:"🔥",label:"جريء",color:"#e74c3c",gradient:"linear-gradient(135deg,#e74c3c,#c0392b)"}
+};
+const CAT_ORDER=["friends","family","couples","lovers","work","ramadan","eid","bac","spicy"];
+
+const BASE_Q={
+  friends:["شكون أكثر واحد يڨول 'أنا جاي' وهو مازال في الدار؟ 😂",
+    "شكون أكثر واحد يصرف فلوسو في القهوة؟ ☕",
+    "شكون أكثر واحد يضحك وحدو؟ 😅",
+    "شكون اللي يكذب أكثر في المجموعة؟ 🤥",
+    "شكون اللي دايمن يتأخر؟ ⏰",
+    "شكون اللي ياكل ماكلة الغير بدون ما يطلب؟ 🍕",
+    "شكون اللي يبعت رسالة نصية بدل ما يكلم في حالة الطوارئ؟ 📱",
+    "شكون اللي عندو أكثر تصاور غريبة في التليفون؟ 📸",
+    "شكون اللي يكون أول واحد يخرج من كوه لانتا؟ 🏝️",
+    "شكون اللي يقعد أطول وقت في الحمام؟ 🚽",
+    "شكون اللي يغني أزكى في الكاريوكي؟ 🎤",
+    "شكون اللي ينسى عيد ميلادو؟ 🎂",
+    "شكون اللي يحب يقع في غرام نجمة/نجم؟ 🌟",
+    "شكون اللي ينام أطول وقت في نهار السبت/الأحد؟ 😴",
+    "شكون اللي أسوء سواق في المجموعة؟ 🚗",
+    "شكون اللي يرعب أكثر وقت الكامبينغ؟ ⛺",
+    "شكون اللي يكثر يتصل بأمه وقت المشكلة؟ 📞",
+    "شكون اللي يحس بالخزي أكثر من تصاورو القديمة؟ 😬",
+    "شكون اللي يخون المجموعة باش الفلوس أول واحد؟ 💰",
+    "شكون اللي يحكي بصوت أعلى في الرستورونات؟ 📣",
+    "شكون اللي يخاف أكثر من الحشرات؟ 🕷️",
+    "شكون اللي يكون أضعف واحد في البقاء في الطبيعة؟ 🌲",
+    "شكون اللي عندو أكثر إشعارات ما يتقراوش؟ 🔔",
+    "شكون اللي يصعب عليه أكبر شي يتبع حمية؟ 🍰",
+    "شكون اللي يكثر يصدق الأخبار الكاذبة؟ 📰",
+    "شكون اللي يرقص أغرب شيء في الليالي؟ 💃",
+    "شكون اللي يكثر يعمل أزمة في ايكيا؟ 🪑",
+    "شكون اللي يكثر يعمل سيلفي؟ 🤳",
+    "شكون اللي ينسى أعياد ميلاد الآخرين؟ 🎁",
+    "شكون اللي يبكي أكثر في الأفلام الكرتونية؟ 🎬",
+    "شكون اللي يكثر يستعمل الإيموجي في رسايلو؟ 😂",
+    "شكون اللي أضعف واحد في الجغرافيا؟ 🌍",
+    "شكون اللي يكثر يتوه في مدينة ما يعرفها؟ 🗺️",
+    "شكون اللي يحكي بصوت أعلى في التليفون برة؟ 📲",
+    "شكون اللي مدمن أكثر على وسائل التواصل؟ 📱",
+    "شكون اللي عندو أضحوكات أضعف شيء؟ 😅",
+    "شكون اللي يكون أول واحد يستسلم في تحدي؟ 🏳️",
+    "شكون اللي ياكل أسرع شيء؟ 🍽️",
+    "شكون اللي يكثر يهرت في نومو؟ 😪",
+    "شكون اللي يخاف أكثر من الظلام؟ 🌑",
+    "شكون اللي يخسر أول واحد في ألعاب الفيديو؟ 🎮",
+    "شكون اللي يكثر يكسر حاجة بالغلط؟ 💥",
+    "شكون اللي يبكي أكثر في إعلانات الكريسماس؟ 🎄",
+    "شكون اللي يكثر يدخل في نقاش مع خرائط قوقل؟ 🗺️",
+    "شكون اللي ما يحفظش سر أطول وقت؟ 🤫",
+    "شكون اللي يكثر يطلب البيتزا كلها لروحو؟ 🍕",
+    "شكون اللي روحياتو في الضحك أكثر شك؟ 😏",
+    "شكون اللي يكثر يشتري حاجة ما تنفعش؟ 🛒",
+    "شكون اللي عندو أكثر لباس ما يلبسوش؟ 👗",
+    "شكون اللي أحسن ممثل باش يمّرض روحو؟ 🤒"],
+
+  family:["شكون أكثر واحد ياكل في الدار؟ 🍲",
+    "شكون أكثر واحد يسرق من الثلاجة بالليل؟ 😂",
+    "شكون اللي ياكل أكثر في الدار؟ 🍽️",
+    "شكون اللي دايمن يسبّت الضو وقت يخرج؟ 💡",
+    "شكون اللي يستعمل كل الماء الساخن في الدوش؟ 🚿",
+    "شكون اللي أصعب واحد يفيق في الصباح؟ ⏰",
+    "شكون اللي يخرج يشتري ويرجع بحاجات ما حسبش حسابها؟ 🛒",
+    "شكون اللي يحكي أكثر وقت الأكل؟ 🗣️",
+    "شكون اللي يقلب أسرع شيء في التلفزة؟ 📺",
+    "شكون اللي يصعب عليه أكبر شي يرمي الحاجات القديمة؟ 📦",
+    "شكون اللي يكثر ينسى يسكر الصنبر؟ 🚰",
+    "شكون اللي أول واحد يقوم في نهار العطلة؟ ☀️",
+    "شكون اللي يعمل أكثر صوت وقت يرجع متأخر؟ 🌙",
+    "شكون اللي ياكل آخر بسكوي دون ما يقول؟ 🍪",
+    "شكون اللي يكثر يغيب على التجمعات العائلية؟ 👨‍👩‍👧",
+    "شكون اللي يصوت أعلى شيء وقت فريقو يسجل؟ ⚽",
+    "شكون اللي يعطي أغرب الهدايا في الكريسماس؟ 🎁",
+    "شكون اللي يعمل أكثر نكت بابا/ماما؟ 😄",
+    "شكون اللي يأخذ أطول وقت باش ياكل؟ 🍴",
+    "شكون اللي يكثر يعطي نصائح ما تحلّش؟ 🧠",
+    "شكون اللي يرتب أقل في غرفتو؟ 🛏️",
+    "شكون اللي مدمن أكثر على تليفونو وقت المايدة؟ 📵",
+    "شكون اللي يعمل أفقر طبخة في العائلة؟ 👨‍🍳",
+    "شكون اللي يكثر يتصل في أي وقت؟ 📞",
+    "شكون اللي عندو أحرج تصاور من الطفولة؟ 👶",
+    "شكون اللي يكثر يغفى في الكنبة؟ 🛋️",
+    "شكون اللي أول واحد يمشي من تجمع عائلي؟ 🚪",
+    "شكون اللي عندو أقوى منبه في الصباح؟ ⏰",
+    "شكون اللي يكثر يخرب المفاجأة؟ 🎉",
+    "شكون اللي يتفرج على نفس البرامج بالكرّ؟ 📺",
+    "شكون اللي يستعير حوايج الغير بدون ما يطلب؟ 👕",
+    "شكون اللي أدرامي أكثر وقت يكون مريض؟ 🤒",
+    "شكون اللي عندو أكثر تصاور ماكلة في التليفون؟ 🥘",
+    "شكون اللي يبكي أكثر في الأفراح؟ 💒",
+    "شكون اللي دايمن ينسى يمشي يجيب واحد من المطار؟ ✈️",
+    "شكون اللي يحزم شنطة في اللخر؟ 🧳",
+    "شكون اللي يعطي نصائح قديمة ما عادش تنفع؟ 📚",
+    "شكون اللي يكثر يتذمر من الرستوران المختار؟ 🍽️",
+    "شكون اللي يبعت أقدم الميمات؟ 😂",
+    "شكون اللي يكثر يحكي نفس القصة 10 مرات؟ 🔄",
+    "شكون اللي عندو أكبر عدد من المشاريع اللي ما كملهاش؟ 🔨",
+    "شكون اللي أصعب واحد يتقنع؟ 🗣️",
+    "شكون اللي يجيب أحسن كعكة لاعياد العائلة؟ 🎂",
+    "شكون اللي دايمن يجي معاه ضيوف مفاجأة؟ 🎊",
+    "شكون اللي يكثر يتخانق على التلفار؟ 📺",
+    "شكون اللي لازم دايمن يكون آخر كلمة؟ 💬",
+    "شكون اللي يحضر أحسن بوفي من بقايا الأكل؟ 🥡",
+    "شكون اللي يكثر يشارك كل حاجة على الفايسبوك؟ 👍",
+    "شكون اللي أحسن واحد يحاكي أعضاء العائلة الآخرين؟ 🎭",
+    "شكون اللي يكثر يطلب كل المنيو في الرستوران؟ 🍜"],
+
+  couples:["شكون أكثر واحد يغير؟ 😏",
+    "شكون أكثر واحد يقول 'وينك؟' كل شوي؟ 📱",
+    "شكون اللي يأخذ أكثر مكان في القاعدة؟ 🛏️",
+    "شكون اللي دايمن يختار الرستوران؟ 🍽️",
+    "شكون اللي يرفض يسأل على الطريق حتى لو توه؟ 🗺️",
+    "شكون اللي يمسك الملاية في الليل؟ 🛌",
+    "شكون اللي دايمن ينسى أعياد الميلاد؟ 📅",
+    "شكون اللي يأخذ أطول وقت باش يجهز روحو؟ 💆",
+    "شكون اللي أكثر واحد يغير؟ 😒",
+    "شكون اللي يصرف أكثر فلوس بلا فايدة؟ 💸",
+    "شكون اللي دايمن عندو الحق في الخناقات؟ 🤔",
+    "شكون اللي يكثر يتجاهل برامج الآخر؟ 📺",
+    "شكون اللي يطلب ويأكل ماكلة الآخر؟ 🍟",
+    "شكون اللي أول واحد يغفى؟ 😴",
+    "شكون اللي يغني أزكى تحت الدوش؟ 🎶",
+    "شكون اللي يكثر يشتري حاجة دون ما يستشير الآخر؟ 🛒",
+    "شكون اللي يعمل روحو يتفرج في فلم وهو على تليفونو؟ 📱",
+    "شكون اللي أرومانسي أكثر في الحياة اليومية؟ 💕",
+    "شكون اللي يكثر يحضر مفاجأة ويحرقها بروحو؟ 🎉",
+    "شكون اللي يكثر يزعل بصمت؟ 😤",
+    "شكون اللي يكثر يتصوّر وقت الخروج؟ 📷",
+    "شكون اللي أحسن طباخ في الثنائي؟ 👨‍🍳",
+    "شكون اللي يرتب أقل؟ 🧹",
+    "شكون اللي أصعب واحد يتقنع باش يخرج؟ 🚪",
+    "شكون اللي يكثر يبكي في الأفلام الرومانسية؟ 🎬",
+    "شكون اللي يجاوب أقل شيء على الرسائل؟ ⏳",
+    "شكون اللي دايمن يختار الوقت المردي باش يحكي موضوع جدّي؟ 🕐",
+    "شكون اللي مدمن أكثر على تليفونو في القاعدة؟ 📵",
+    "شكون اللي يكثر يتذكر خناقة صارت قبل 3 سنين؟ 🧠",
+    "شكون اللي يعمل أكثر بوسة برّة؟ 😘",
+    "شكون اللي يكثر يبدل الخطط في اللخر؟ 🔄",
+    "شكون اللي أكثر واحد متردد في اختيار فلم؟ 🎥",
+    "شكون اللي ياكل أكثر حاجيات مالحة في السينما؟ 🍿",
+    "شكون اللي يحط أكبر عدد من المنبهات في الصباح؟ ⏰",
+    "شكون اللي يكثر يلقى حجة باش ما يكنّش؟ 🧽",
+    "شكون اللي يكثر يحكي وقت الأفلام؟ 🗣️",
+    "شكون اللي يختار الفنادق وقت العطلة؟ 🏨",
+    "شكون اللي يكثر يتوه وهو يستعمل الGPS؟ 🛰️",
+    "شكون اللي ينام مع أكثر مخدة؟ 🛏️",
+    "شكون اللي يكثر يدعو ناس بدون ما يشاور الآخر؟ 🚪",
+    "شكون اللي أكثر واحد يغير من الحبايب القدامى؟ 💔",
+    "شكون اللي يكثر يفضح سر قدام الناس؟ 🤫",
+    "شكون اللي أرومانسي أكثر في الليل؟ 🌙",
+    "شكون اللي يكثر يختار هدية ما تنفعش؟ 🎁",
+    "شكون اللي دايمن يكون مبسوط وقت يفيق؟ ☀️",
+    "شكون اللي يكثر يحب يربي حيوان أليف؟ 🐾",
+    "شكون اللي يكثر يتفرج على فيديوات اليوتيوب في 2 صباحا؟ 📺",
+    "شكون اللي يكثر يذكر الخناقة في حكاية عادية؟ 💬",
+    "شكون اللي أدرامي أكثر وقت يكون تعبان؟ 😩",
+    "شكون اللي يكثر يشتري آلة ما تنفعش على الأنترنت؟ 📦"],
+
+  lovers:["شكون أكثر واحد يعمل flirt؟ 😏",
+    "شكون أكثر واحد يحب الكلام الجريء؟ 😂",
+    "شكون اللي أرومانسي أكثر فيكم الاثنين؟ 💑",
+    "شكون اللي يبعت أكثر رسايل حبّ؟ 💌",
+    "شكون اللي يكثر يعمل تصريح حب محرج؟ ❤️",
+    "شكون اللي يحمر وجهو أكثر في موعد غرامي؟ 😳",
+    "شكون اللي يكثر يحضر ليلة كاملة؟ 🌹",
+    "شكون اللي يكثر يحفظ كل تذاكر السينما للذكرى؟ 🎟️",
+    "شكون اللي أرومانسي أكثر في التفاصيل الصغيرة ديال اليوم؟ 🫶",
+    "شكون اللي يكثر يكتب رسالة حب باليد؟ ✉️",
+    "شكون اللي يحضر أحسن فطور في القاعدة؟ 🥞",
+    "شكون اللي يكثر يبكي وقت العرس؟ 💒",
+    "شكون اللي أعجب بالتاني أول مرة؟ ⚡",
+    "شكون اللي يكثر يغني تحت الشباك؟ 🎸",
+    "شكون اللي يكثر يتفكر كل تفصيلة من أول مرة شفتو فيها بعض؟ 📖",
+    "شكون اللي يكثر ينظم سفر مفاجأة؟ ✈️",
+    "شكون اللي أكثر واحد يعناق فيكم؟ 🤗",
+    "شكون اللي يكثر يطالع في الآخر وقت ينام؟ 👀",
+    "شكون اللي يكثر يعمل ألبوم تصاور للثنائي؟ 📚",
+    "شكون اللي يقول 'نحبك' أول واحد في الصباح؟ 🌅",
+    "شكون اللي يكثر يرقص تحت المطر؟ 🌧️",
+    "شكون اللي يختار الأغاني وقت السيارة؟ 🎵",
+    "شكون اللي يكثر يحضر عشاء بالشموع؟ 🕯️",
+    "شكون اللي يحفظ أكثر هدايا وتفاصيل صغيرة؟ 🎀",
+    "شكون اللي أرومانسي أكثر في رسايل الليل؟ 🌙",
+    "شكون اللي يكثر يعمل طلب زواج أصلي؟ 💍",
+    "شكون اللي يكثر يحفظ أسرار صغيرة حنينة؟ 🤫",
+    "شكون اللي أكثر واحد متحمس لأعياد الميلاد؟ 🎂",
+    "شكون اللي يكثر يتصوّر الآخر دون ما يحس؟ 📸",
+    "شكون اللي يكثر يحضر قائمة أغاني خاصة؟ 🎶",
+    "شكون اللي يكثر يعمل نكات باش يفضّل جو؟ 😄",
+    "شكون اللي أحسن واحد يواسي الآخر في الأوقات الصعبة؟ 🫂",
+    "شكون اللي يكثر يعمل عادات غرامية؟ 💫",
+    "شكون اللي يحب أكثر يعمل عناق في الكنبة؟ 🛋️",
+    "شكون اللي يكثر يخترع أسماء تدليل صغيرة؟ 🐥",
+    "شكون اللي يكثر يطبخ الأكلة المفضلة للآخر بدون ما يطلب؟ 🍝",
+    "شكون اللي أرومانسي أكثر وقت الأسفار؟ 🌍",
+    "شكون اللي يكثر يحط حبيبات صغيرة حب؟ 📝",
+    "شكون اللي يكثر يبكي وقت يتفرج على فيديو على بداياتكم؟ 🎬",
+    "شكون اللي يكثر يحب يتفرج على النجوم مع بعض؟ ⭐",
+    "شكون اللي يكثر يعمل مفاجأة في عيد الحب؟ 💝",
+    "شكون اللي يكثر يحفظ كل الرسائل النصية من أول ما بديتو العلاقة؟ 💬",
+    "شكون اللي أرومانسي أكثر وقت الخروج للرستوران؟ 🍷",
+    "شكون اللي يكثر يختار فندق رومانسي؟ 🏩",
+    "شكون اللي يكثر يعمل قائمة أغاني تحكي قصتكم؟ 🎼",
+    "شكون اللي يكثر يبكي وقت يسمع 'أغانيتكم'؟ 🎵",
+    "شكون اللي يكثر يحس بالوحشة وقت الآخر يكون مسافر؟ 😢",
+    "شكون اللي أحسن واحد يسمع للآخر وهو يحكي على نهارو؟ 👂",
+    "شكون اللي يكثر يحب يعاود يمشي للمكان اللي تحابيتو فيه أول مرة؟ 🗺️",
+    "شكون اللي يكثر يحب يربّو حيوان أليف مع بعض؟ 🐾"],
+
+  work:["شكون أكثر واحد يتأخر كل نهار في الخدمة؟ ⏰",
+    "شكون أكثر واحد يشرب قهوة أكثر من المطلوب؟ ☕",
+    "شكون اللي يكثر ياخذ بريك؟ 🚬",
+    "شكون اللي دايمن يحكي على راسو بالهاتف الخاص؟ 📱",
+    "شكون اللي ينجز أقل حاجة في اليوم؟ 📉",
+    "شكون اللي يكثر يغشش في التقرير؟ 📝",
+    "شكون اللي ينام في المكتب وقت المدير ماكش؟ 😴",
+    "شكون اللي يتغيب أكثر بحجة المرض؟ 🤒",
+    "شكون اللي يكثر يطلب قهوة للكل باش يرضيهم؟ ☕",
+    "شكون اللي يلوم على الآلة ولا الحاسوب وقت يغلط؟ 💻",
+    "شكون اللي دايمن ياخذ حصة الأكل أطول وحدة؟ 🍱",
+    "شكون اللي يكثر يتكلم في الجوال في وقت الخدمة؟ 📞",
+    "شكون اللي يحلّ مشاكل أكثر مما يسبب؟ 🛠️",
+    "شكون اللي يكثر يقول 'باش نبداو شوية'؟ ⏳",
+    "شكون اللي دايمن يضيع الأوراق المهمة؟ 📂",
+    "شكون اللي يكثر ينسى يسوي تسجيل الخروج؟ 🚪",
+    "شكون اللي يكثر يتشكى من الحر ولا البرد؟ 🌡️",
+    "شكون اللي يكثر يتهاوش مع الزملاء؟ 👊",
+    "شكون اللي يكثر يطلب مساعدة في حاجات بسيطة؟ 🙋",
+    "شكون اللي يعمل روحو مشغول باش ما يساعدش؟ 🙈",
+    "شكون اللي يكثر يشغل المكيف حتى في الشتاء؟ ❄️",
+    "شكون اللي دايمن يجيب حلويات للمكتب؟ 🍰",
+    "شكون اللي يكثر يخلص خدمتو قبل الوقت ويسكت؟ 🤫",
+    "شكون اللي يكثر يطلب أجر إضافي على حاجة ما خدمهاش؟ 💰",
+    "شكون اللي يكثر يمدح روحو قدام الرئيس؟ 🗣️",
+    "شكون اللي دايمن ياخذ كريدي على خدمة غيرو؟ 🎭",
+    "شكون اللي يكثر يتنحنح باش يبان شغال؟ 🎤",
+    "شكون اللي يكثر يتأخر من الغداء؟ 🍽️",
+    "شكون اللي يكثر يجيب الماكلة للحومة؟ 🥪",
+    "شكون اللي دايمن يكتب إيميلات طويلة بلا معنى؟ ✉️",
+    "شكون اللي يكثر يحط منبه باش يذكرنا بالفاصل؟ ⏰",
+    "شكون اللي يكثر يتفرج في فيديوات وقت الخدمة؟ 🎥",
+    "شكون اللي دايمن ينسى يسوي الاجتماعات؟ 📅",
+    "شكون اللي يكثر يبرر أخطاءه ب 'الضغط'؟ 😩",
+    "شكون اللي يكثر يشعل النقاش في أشياء ما تهمش؟ 🗣️",
+    "شكون اللي دايمن يكون نحيل وقت التوزيع؟ 🏃",
+    "شكون اللي يكثر يجيب كفّي معاه للخدمة؟ 🧤",
+    "شكون اللي يكثر يحلف ب 'راسي' وقت ما ينجز حاجة؟ 🤦",
+    "شكون اللي دايمن يحاول يخلص برشا خدمات في آخر الوقت؟ ⏩",
+    "شكون اللي يكثر يغش في الوقت (يمضي واجب ومازال ما خدمش)؟ 🕒",
+    "شكون اللي أحسن واحد يتفادى المسؤولية؟ 🏃‍♂️",
+    "شكون اللي يكثر يقول 'الخدمة مالتنا'؟ 🇹🇳",
+    "شكون اللي دايمن يطلب سيارة الشركة لحكاياتو الشخصية؟ 🚗",
+    "شكون اللي يكثر ينسى يرد على الإيميلات؟ 📧",
+    "شكون اللي يكثر يخاف من الإيميلات الفجائية؟ 😨",
+    "شكون اللي دايمن يخبي الآلة الحاسبة متاع المكتب؟ 🧮",
+    "شكون اللي يكثر يعمل روحو ما فهمش باش يعاود السؤال؟ 🤔",
+    "شكون اللي يكثر يحط صورة عيلتو على المكتب باش يبان مسؤول؟ 🖼️",
+    "شكون اللي دايمن يسبقو العيد في طلب العيدية؟ 💶",
+    "شكون اللي يكثر يشرب ميرمية للضغط؟ 🍵",
+    "شكون اللي أحسن واحد يغطي على زملاءه؟ 🦸"],
+
+  ramadan:["شكون أكثر واحد ياكل في السحور؟ 🌙",
+    "شكون أكثر واحد ينعس بعد الفطور؟ 😴",
+    "شكون اللي يكثر يحضر زوينة رمضان في المطبخ؟ 🍲",
+    "شكون اللي دايمن ينسى يصوم أول يوم؟ 🤭",
+    "شكون اللي يكثر يطلب السمبوسة قبل الفطار؟ 🥟",
+    "شكون اللي يكثر يتفرج في المسلسلات التركية وقت رمضان؟ 📺",
+    "شكون اللي دايمن يقول 'ما نجمش نصوم' ويصوم؟ 😅",
+    "شكون اللي يكثر يزور الحلويات عند الجيران؟ 🍪",
+    "شكون اللي يكثر يتأخر في الإفطار بحجة الشغل؟ ⏰",
+    "شكون اللي دايمن يشرب الماء قدام الصايمين بالغلط؟ 🚰",
+    "شكون اللي يكثر ياكل زميتة في السحور؟ 🥖",
+    "شكون اللي دايمن ينسى يسبّت المنبه للسحور؟ ⏰",
+    "شكون اللي يكثر ياخذ قيلولة العصر اللي تخلّيه يفوت صلاة؟ 😴",
+    "شكون اللي دايمن يزيد في الملح باش يكثر العطش للآخرين؟ 🧂",
+    "شكون اللي يكثر يقول 'نعمل رياضة بعد الفطار' ويموت على الكنبة؟ 🛋️",
+    "شكون اللي دايمن يدعيلو بالبركة وهو ياكل أسرع واحد؟ 🍽️",
+    "شكون اللي يكثر يحضر اللخم للفطار؟ 🥞",
+    "شكون اللي دايمن يزيد في الحلويات ويكثر منها؟ 🍰",
+    "شكون اللي يكثر يصور الأكل وينزله على الأنستغرام؟ 📸",
+    "شكون اللي دايمن يشك في أذان المغرب ويقول 'لسة ما أذنش'؟ 🕌",
+    "شكون اللي يكثر ياكل بجعة باش يعوض النهار كله؟ 🐪",
+    "شكون اللي دايمن يطلب فريكاسي في الليل؟ 🥪",
+    "شكون اللي يكثر يقول 'رمضان فرصة باش نركّز على روحي' ويزيد يكثر أكل؟ 😂",
+    "شكون اللي دايمن يعمل عزومة ويجي عليه الجميع؟ 🎉",
+    "شكون اللي يكثر يخبى زوينة رمضان للأولاد؟ 🍬",
+    "شكون اللي دايمن يتقهو بعد الفطار ويمسك روحو ما ينجمش ينام؟ ☕",
+    "شكون اللي يكثر يروح للجامع وقت التراويح باش يبان برة؟ 🕌",
+    "شكون اللي دايمن يقول 'ما نزيدش ناكل برشا' ويكمل؟ 😋",
+    "شكون اللي يكثر يعمل بريك في الخدمة باش يرقد؟ 😪",
+    "شكون اللي دايمن يخاف من زيادة الوزن في رمضان؟ ⚖️",
+    "شكون اللي يكثر يستهلك الشاشية (حرمل)؟ 🍵",
+    "شكون اللي دايمن ينسى يزكي؟ 💰",
+    "شكون اللي يكثر يحب الزلابية أكثر من أي حاجة؟ 🥨",
+    "شكون اللي دايمن يحكي على 'روحانية رمضان' وهو ما يقراش قرآن؟ 📖",
+    "شكون اللي يكثر يشكي من العطش والجو؟ 🥵",
+    "شكون اللي دايمن يتبرع بحاجتو للفقراء وهو ما يتصدقش؟ 🧥",
+    "شكون اللي يكثر يقرا دعاء الإفطار بصوت عالي؟ 🕌",
+    "شكون اللي دايمن يعدّل الوقت في الجوال كل يوم؟ 📱",
+    "شكون اللي يكثر يجيب حشيشة (حلوى) للفطار من برّا؟ 🥮",
+    "شكون اللي دايمن يحلف بالمصحف وقت الخناقة؟ 📖",
+    "شكون اللي يكثر ياكل البيض في السحور وينتن؟ 🥚",
+    "شكون اللي دايمن يروح للسوق آخر نهار رمضان ويصرف؟ 🛒",
+    "شكون اللي يكثر يعمل نومة العصر اللي ما تخلصش؟ 😴",
+    "شكون اللي دايمن ينعس في التروايح ويوقع؟ 😵",
+    "شكون اللي يكثر يشرب السوائل باش ما يعطشش؟ 💧",
+    "شكون اللي دايمن يطلب 'فطور خفيف' وينتهي ياكل برشا؟ 🍲",
+    "شكون اللي يكثر يحب العيش الأحمر في رمضان؟ 🍅",
+    "شكون اللي دايمن يسرق لقمة قبل الأذان ويعمل روحو ما عملش؟ 🤫",
+    "شكون اللي يكثر يقول 'العام الجاي نزيدو نقراو' وما يزيدش؟ 📚",
+    "شكون اللي أحسن واحد في تجهيز مائدة رمضان؟ 🍽️"],
+
+  eid:["شكون أكثر واحد يحب لبسة العيد؟ 👗",
+    "شكون أكثر واحد يطلب العيدية؟ 💰",
+    "شكون اللي يكثر يتصوّر في العيد وينزلكم على الحالة؟ 📸",
+    "شكون اللي دايمن يخرج آخر واحد باش يزور؟ 🚶",
+    "شكون اللي يكثر ياكل الغريبة والعيدية في نفس الوقت؟ 🍪",
+    "شكون اللي يحب يكون عنده أكبر مائدة في العيد؟ 🍲",
+    "شكون اللي دايمن ينسى يعطيك العيدية؟ 😅",
+    "شكون اللي يكثر يحل الشنطة باش يلبس الجديد من ليلة العيد؟ 👔",
+    "شكون اللي دايمن يصرف العيدية في نفس النهار على حاجات ما تنفعش؟ 💸",
+    "شكون اللي يكثر يحلف ب 'بابا حج' وقت العيد؟ 🧓",
+    "شكون اللي أكثر واحد يزور العائلة كلها في نهار واحد؟ 🏃‍♂️",
+    "شكون اللي دايمن يقول 'كل عام وأنتم بخير' لكل واحد على كيفو؟ 🗣️",
+    "شكون اللي يكثر يجيب هدايا غالية باش يبان كريم؟ 🎁",
+    "شكون اللي دايمن يطلب العيدية كاش ولا بشيك؟ 💵",
+    "شكون اللي يكثر يروح للمسجد في صلاة العيد وينام؟ 😴",
+    "شكون اللي دايمن يلبس نفس اللبسة متاع العام اللي فات؟ 👕",
+    "شكون اللي يكثر ياكل المقلوبة (الكسكسي) في العيد؟ 🍚",
+    "شكون اللي دايمن يشتكي من الزحمة في العيد؟ 🚗",
+    "شكون اللي يكثر يصور الفلوس اللي عندو وينزلها على السناب؟ 💰",
+    "شكون اللي دايمن يسرق العيدية من الصغار؟ 😈",
+    "شكون اللي يكثر يقول 'العيد عندي ما يحبش' وهو متفائل؟ 🌟",
+    "شكون اللي دايمن يخبي العيدية باش يصرفها على روحو؟ 🤫",
+    "شكون اللي يكثر يحب عيد الفطر أكثر من عيد الأضحى؟ 🐑",
+    "شكون اللي دايمن يضبط الميزانية للعيد ويصرف أكثر؟ 📉",
+    "شكون اللي يكثر يتقهوي عند الحومة كلهم؟ ☕",
+    "شكون اللي دايمن يتنحنح وقت يجي للعيدية باش يذكّر؟ 🗣️",
+    "شكون اللي يكثر يلبس الطربوش (شقشوقة) حاجة تقليدية؟ 🧢",
+    "شكون اللي دايمن يطلب منك 'ما تنساش العيدية العام الجاي'؟ 🤲",
+    "شكون اللي يكثر يكذب في قيمة الهدية اللي جابها؟ 🎭",
+    "شكون اللي دايمن يروح للشاطئ في العيد ويبرد؟ 🏖️",
+    "شكون اللي يكثر يحضر حلويات العيد وياكل قبل الضيوف؟ 🍰",
+    "شكون اللي دايمن يقول 'علاش ما جبتليش هدية؟'؟ 😒",
+    "شكون اللي يكثر يزور المقابر في العيد؟ 🪦",
+    "شكون اللي دايمن يغش في عدد العيديات اللي خذاها؟ 🤥",
+    "شكون اللي يكثر يحب عيدية الحنة (المال) أكثر من أي حاجة؟ 💶",
+    "شكون اللي دايمن يصرف على روحو ويقول 'هدية مني لنفسي'؟ 🛍️",
+    "شكون اللي يكثر يتصالح مع الناس في العيد؟ 🤝",
+    "شكون اللي دايمن يعمل عيدية خاصة لولادو وحدهم؟ 👨‍👦",
+    "شكون اللي يكثر يشتري ملابس الصيف في عيد الفطر؟ 👙",
+    "شكون اللي دايمن يخاف من الذبايح في عيد الأضحى؟ 😨",
+    "شكون اللي يكثر يتبع طقوس غريبة في العيد؟ 🕯️",
+    "شكون اللي دايمن يطلب الرتبة في الزيارات (أول واحد يجي)؟ 🥇",
+    "شكون اللي يكثر يتجاهل عيدية المحتاجين؟ 🙈",
+    "شكون اللي دايمن يعمل عيدية افتراضية على الأنترنت؟ 💻",
+    "شكون اللي يكثر يحب العيدية من غير ما يكون كبير ولا صغير؟ 🧒👴",
+    "شكون اللي دايمن يشتري لعب نارية ويخوف الصغار؟ 🎆",
+    "شكون اللي يكثر يعمل 'عيد مبارك' قبل الفجر؟ 🌅",
+    "شكون اللي دايمن ياخذ العيدية مرتين (من الوالدين ومن الحومة)؟ 😏",
+    "شكون اللي يكثر ينزل بوست 'العيد عندنا غير'؟ 📱",
+    "شكون اللي أحسن واحد يوزع العيدية على الكل؟ 👐"],
+  bac:["شكون أكثر واحد يخاف من الباك؟ 😰",
+    "شكون أكثر واحد يراجع آخر ليلة؟ 📚",
+    "شكون اللي يكثر يقول 'باش نبدا من غدوة' وما يبداش؟ ⏳",
+    "شكون اللي دايمن يطلب الحظ أكثر من المراجعة؟ 🍀",
+    "شكون اللي يكثر يدي ورقة الغش (براش) في الباك؟ 📄",
+    "شكون اللي دايمن يتفائل ب 'ربّي يسهل' ويرقد؟ 😴",
+    "شكون اللي يكثر يضيع وقتو في التلفون قبل الباك؟ 📱",
+    "شكون اللي دايمن يركّز على المواد اللي ما تهمش؟ 📖",
+    "شكون اللي يكثر يحفظ في آخر ساعة وينسى كل شيء؟ 😵",
+    "شكون اللي دايمن يخاف من مادة الفلسفة أكثر حاجة؟ 🤯",
+    "شكون اللي يكثر يطلب معادلات من الكل؟ 🙏",
+    "شكون اللي دايمن يشجع روحو يقول 'نقدر عليها'؟ 💪",
+    "شكون اللي يكثر يحضر قهوة ليلية باش يراجع؟ ☕",
+    "شكون اللي دايمن يلوم على الأستاذ وقت ما ينجحش؟ 👨‍🏫",
+    "شكون اللي يكثر يكتب دعاء على الورقة قبل ما يبدا؟ 📝",
+    "شكون اللي دايمن يخرج من قاعة الباك باكي؟ 😭",
+    "شكون اللي يكثر يحب المواد الأدبية أكثر من العلمية؟ 📖",
+    "شكون اللي دايمن يخلط بين التواريخ في التاريخ؟ 📅",
+    "شكون اللي يكثر يخاف من موضوع الإنشاء؟ ✍️",
+    "شكون اللي دايمن يراجع مع صحابو وينتهي بالحكايات؟ 🗣️",
+    "شكون اللي يكثر يطلب دعاء الأمهات؟ 🤲",
+    "شكون اللي دايمن يشتري كتب برشا وما يقراش فيهم؟ 📚",
+    "شكون اللي يكثر يبرمج روحو على 'باش نعاود العام'؟ 🔁",
+    "شكون اللي دايمن يصيب في المواضيع اللي راجعها بالصدفة؟ 🍀",
+    "شكون اللي يكثر يتغشش في الباك وينجح؟ 🎭",
+    "شكون اللي دايمن يسرح بره في وقت الامتحان؟ 🌍",
+    "شكون اللي يكثر يشرب ميرمية باش يركّز؟ 🍵",
+    "شكون اللي دايمن ياخذ معاه قارورة ماء وياكل بجعة في القاعة؟ 💧",
+    "شكون اللي يكثر يدعي بالمرض يوم الباك؟ 🤒",
+    "شكون اللي دايمن يقول 'الباك تاع القدر'؟ 🌟",
+    "شكون اللي يكثر يخاف من الأسئلة المباشرة؟ ❓",
+    "شكون اللي دايمن يضيع في الأوراق وقت الامتحان؟ 📄",
+    "شكون اللي يكثر يحس بضغط كبير ويتعرق؟ 💦",
+    "شكون اللي دايمن يغلط في الباركود؟ 🔢",
+    "شكون اللي يكثر يكتب برشا حشو في التحرير؟ 📝",
+    "شكون اللي دايمن يطلب وقت إضافي ولا يعطوه؟ ⏰",
+    "شكون اللي يكثر يعمل روحو فاهم وينتهي يقلب الورقة؟ 🃏",
+    "شكون اللي دايمن يحوس على براش في نص الامتحان؟ 🕵️",
+    "شكون اللي يكثر ينام على الطاولة في الباك؟ 😴",
+    "شكون اللي دايمن يخرج أول واحد من القاعة؟ 🏃‍♂️",
+    "شكون اللي يكثر يعمل منحة باكلوريا للطلاب؟ 💰",
+    "شكون اللي دايمن يصفق للطلاب الأوائل؟ 👏",
+    "شكون اللي يكثر يحلم بالنتيجة قبل ما تطلع؟ 💭",
+    "شكون اللي دايمن يضرب على راسو وقت ما يغلط؟ 🤦",
+    "شكون اللي يكثر يكذب على أهلو باش ما يضغطوش؟ 🤫",
+    "شكون اللي دايمن يتفرج في فيديوات تحفيزية قبل الباك؟ 📺",
+    "شكون اللي يكثر يحفظ الأغاني وينسى الدروس؟ 🎶",
+    "شكون اللي دايمن يطلب قهوة من المراقب؟ ☕",
+    "شكون اللي يكثر يشرب أحمر (مشروب طاقة) ليلة الباك؟ 🧃",
+    "شكون اللي أحسن واحد ينسا كل شيء بعد الباك؟ 🎉"],
+  spicy:["شكون أكثر واحد عنده خبرة؟ 🔥",
+    "شكون أكثر واحد يبدا أول؟ 😈",
+    "شكون اللي يكثر يخطط للقاءات سرية؟ 🤫",
+    "شكون اللي دايمن يحب التجديد في العلاقة؟ 🔄",
+    "شكون اللي يكثر يطلب من شريكو حاجات جريئة؟ 😳",
+    "شكون اللي دايمن يخبى العلاقة عن الأهل؟ 🏠",
+    "شكون اللي يكثر ينسا الروح وقت العناق؟ 💋",
+    "شكون اللي دايمن يدي المبادرة في السرير؟ 👑",
+    "شكون اللي يكثر يفتح المواضيع الساخنة أول واحد؟ 🗣️",
+    "شكون اللي دايمن يموت على القبل؟ 😘",
+    "شكون اللي يكثر يروح للأماكن الخاصة؟ 🌲",
+    "شكون اللي دايمن يحب يصور مقاطع في العلاقة؟ 📸",
+    "شكون اللي يكثر يخاف من الفضيحة؟ 😨",
+    "شكون اللي دايمن يحكي مع صحابو على التفاصيل؟ 🗣️",
+    "شكون اللي يكثر يلبس ملابس مثيرة في الدار؟ 👙",
+    "شكون اللي دايمن يشعل الحرارة في النقاش؟ 🌡️",
+    "شكون اللي يكثر يتبع نصائح من الأنترنت في العلاقة؟ 💻",
+    "شكون اللي دايمن يحس بالغيرة ويزيد الشرارة؟ ⚡",
+    "شكون اللي يكثر يطلب من حبيبو أنو يجرب حاجات جديدة؟ 🧪",
+    "شكون اللي دايمن يحب يلعب بالأضواء الخافتة؟ 🕯️",
+    "شكون اللي يكثر يكتب رسائل جريئة؟ 💌",
+    "شكون اللي دايمن يخبي هاتفو باش ما تشوفش دردشتو؟ 📱",
+    "شكون اللي يكثر يعمل سوربرايز ليلي؟ 🌙",
+    "شكون اللي دايمن يستعمل الكلام الموحي؟ 😏",
+    "شكون اللي يكثر تكون طلعاتو الليلية غامضة؟ 🌃",
+    "شكون اللي دايمن ينسى يستعمل الحماية؟ 🚫",
+    "شكون اللي يكثر يحب يشرب باش يتحرر؟ 🍷",
+    "شكون اللي دايمن يكذب على حبيبو باش يروح لمكان آخر؟ 🏠",
+    "شكون اللي يكثر يبحث على علاقة سريعة؟ ⏩",
+    "شكون اللي دايمن يضبط مواعيد غرامية في وقت الضحى؟ ☀️",
+    "شكون اللي يكثر يرسل صور خاصة؟ 📸",
+    "شكون اللي دايمن يحب يكون مسيطر؟ 👑",
+    "شكون اللي يكثر يناقش الحدود في العلاقة؟ 🚧",
+    "شكون اللي دايمن يدخل على مواقع مواعدة؟ 💕",
+    "شكون اللي يكثر يخون علن ولا بالسر؟ 🤐",
+    "شكون اللي دايمن يطلب المغفرة بعد كل خطيئة؟ 😇",
+    "شكون اللي يكثر يحب الكلام الفاحش في الدردشة؟ 🔞",
+    "شكون اللي دايمن يخلط بين الحب والجنس؟ ❤️‍🔥",
+    "شكون اللي يكثر يتعرض للنقد من شريكو بسبب الإفراط؟ 😒",
+    "شكون اللي دايمن يلوم على العلاقة الفاشلة؟ 💔",
+    "شكون اللي يكثر يستعمل العطور المثيرة؟ 🌹",
+    "شكون اللي دايمن يحب يكسر الروتين؟ 🔨",
+    "شكون اللي يكثر يطلع برشة في الشقة؟ 🏃‍♂️",
+    "شكون اللي دايمن يرجع للعلاقة حتى بعد الفراق؟ 🔁",
+    "شكون اللي يكثر يخاف من الحمل ولا الأمراض؟ 🩺",
+    "شكون اللي دايمن يمدح في أداء شريكو قدام صحابو؟ 🗣️",
+    "شكون اللي يكثر يسرح في ميولات غريبة؟ 🤔",
+    "شكون اللي دايمن يشرب حاجات منشطة قبل اللقاء؟ 💊",
+    "شكون اللي يكثر يحب يتبادل الأدوار؟ 🎭",
+    "شكون اللي أحسن واحد يخلّي الآخر يرتاح؟ 🛌"]
+};
+
+const BONUS_Q=[
+  "👑 شكون اللي لو اختفى الكل يحس بيه؟","🎭 شكون أحسن ممثل في الجروب؟",
+  "💕 شكون يخبي حب في قلبه؟","🧠 شكون أذكى واحد؟",
+  "😈 شكون أكثر واحد ماكر؟","🎲 شكون محظوظ دائمًا؟",
+  "📱 شكون مربوط بالتلفون 24/7؟","🍕 شكون الأكل أهم من كل شيء؟",
+  "✈️ شكون يحلم بالسفر دائمًا؟","🎮 شكون أكثر واحد مدمن ألعاب؟",
+  "🛌 شكون يرقد أكثر من 10 ساعات؟","🎵 شكون يغني وحدو في الحمام؟",
+  "💰 شكون سيصبح مليونيرًا يومًا؟","⭐ شكون أكثر واحد طموح؟",
+  "💪 شكون أقوى نفسيًا؟","😂 شكون يضحك على روحو؟",
+  "🔮 شكون عنده حدس قوي؟","🌟 شكون يستحق نجمة النجوم؟",
+  "🎯 شكون يخطط لمستقبله صح؟","💎 شكون أندر واحد في المجموعة؟","شكون اللي دايمن يحب يصور مقاطع في العلاقة؟ 📸",
+    "شكون اللي يكثر يخاف من الفضيحة؟ 😨",
+    "شكون اللي دايمن يحكي مع صحابو على التفاصيل؟ 🗣️",
+    "شكون اللي يكثر يلبس ملابس مثيرة في الدار؟ 👙",
+    "شكون اللي دايمن يشعل الحرارة في النقاش؟ 🌡️",
+    "شكون اللي يكثر يتبع نصائح من الأنترنت في العلاقة؟ 💻",
+    "شكون اللي دايمن يحس بالغيرة ويزيد الشرارة؟ ⚡",
+    "شكون اللي يكثر يطلب من حبيبو أنو يجرب حاجات جديدة؟ 🧪",
+    "شكون اللي دايمن يحب يلعب بالأضواء الخافتة؟ 🕯️",
+    "شكون اللي يكثر يكتب رسائل جريئة؟ 💌",
+    "شكون اللي دايمن يخبي هاتفو باش ما تشوفش دردشتو؟ 📱",
+    "شكون اللي يكثر يعمل سوربرايز ليلي؟ 🌙",
+    "شكون اللي دايمن يستعمل الكلام الموحي؟ 😏",
+    "شكون اللي يكثر تكون طلعاتو الليلية غامضة؟ 🌃",
+    "شكون اللي دايمن ينسى يستعمل الحماية؟ 🚫",
+    "شكون اللي يكثر يحب يشرب باش يتحرر؟ 🍷",
+    "شكون اللي دايمن يكذب على حبيبو باش يروح لمكان آخر؟ 🏠",
+    "شكون اللي يكثر يبحث على علاقة سريعة؟ ⏩",
+    "شكون اللي دايمن يضبط مواعيد غرامية في وقت الضحى؟ ☀️",
+    "شكون اللي يكثر يرسل صور خاصة؟ 📸",
+    "شكون اللي دايمن يحب يكون مسيطر؟ 👑",
+    "شكون اللي يكثر يناقش الحدود في العلاقة؟ 🚧",
+    "شكون اللي دايمن يدخل على مواقع مواعدة؟ 💕",
+    "شكون اللي يكثر يخون علن ولا بالسر؟ 🤐",
+    "شكون اللي دايمن يطلب المغفرة بعد كل خطيئة؟ 😇",
+    "شكون اللي يكثر يحب الكلام الفاحش في الدردشة؟ 🔞",
+    "شكون اللي دايمن يخلط بين الحب والجنس؟ ❤️‍🔥",
+    "شكون اللي يكثر يتعرض للنقد من شريكو بسبب الإفراط؟ 😒",
+    "شكون اللي دايمن يلوم على العلاقة الفاشلة؟ 💔",
+    "شكون اللي يكثر يستعمل العطور المثيرة؟ 🌹",
+    "شكون اللي دايمن يحب يكسر الروتين؟ 🔨",
+    "شكون اللي يكثر يطلع برشة في الشقة؟ 🏃‍♂️"
+];
+
+// LEGENDARY QUESTIONS (rare, 5% chance)
+const LEGENDARY_Q=[
+  "🌟 LEGENDARY: شكون لو دخل السياسة يصلح بلادنا؟",
+  "👑 LEGENDARY: شكون يستحق لقب 'ملك تونس'؟",
+  "🔥 LEGENDARY: شكون لو حذفتو العالم ما يوقفش؟",
+  "💀 LEGENDARY: شكون سري من أسراره يهز حبس؟"
+];
+
+const EVENTS=[
+  {id:"double",emoji:"⚡",title:"⚡ نقطة مزدوجة!",desc:"الأصوات القادمة تساوي الضعف",color:"#00f5ff",mult:2,duration:3},
+  {id:"steal",emoji:"💀",title:"💀 سرقة النقاط!",desc:"المتصدر يخسر 50 نقطة للمتأخر",color:"#ff2d55",mult:1,duration:0},
+  {id:"jackpot",emoji:"🎰",title:"🎰 JACKPOT!",desc:"كل الأصوات تساوي 3× لهذه الجولة",color:"#ffd700",mult:3,duration:1},
+  {id:"immunity",emoji:"🛡️",title:"🛡️ حصانة!",desc:"اللاعب الأخير في الترتيب محمي هذه الجولة",color:"#b040ff",mult:1,duration:1}
+];
+
+const MISSIONS_DATA=[
+  {id:"vote10",label:"🎯 صوّت 10 مرات",max:10,key:"totalVotes",reward:500},
+  {id:"streak5",label:"🔥 combo 5×",max:5,key:"maxStreak",reward:300},
+  {id:"play5",label:"🎮 العب 5 ألعاب",max:5,key:"totalGames",reward:200},
+  {id:"daily3",label:"📅 يومية 3 أيام",max:3,key:"dailyStreak",reward:1000}
+];
+
+const CHALLENGES=["😂 اضحك بصوت عالي 10 ثواني",
+    "💃 ارقص 5 ثواني",
+    "🎤 غني مقطع من أغنية مشهورة",
+    "🥤 اشرب كاس ماء بارد دفعة وحدة",
+    "📞 كلم واحد من الصحاب وقلو أنا نحبك",
+    "😂 حك نكتة خايب",
+    "🧹 اغسل الماعون يا معلم",
+    "🐶 عوط كي الكلب",
+    "🦁 زمجّر كي الأسد",
+    "💪 وري عضلاتك وقل أنا كبير",
+    "🎭 قلد واحد من الجالسين",
+    "📸 صور روحك وحدث عليها",
+    "🤝 صافح الكل وقلهم شكراً",
+    "😡 صيح 'يا لطيف' 3 مرات",
+    "🕺 تحرك كي الدودة",
+    "🍕 تخيل أنك تاكل بيتزا أمام الكل",
+    "😴 تغطّي كي باش ترقد",
+    "🤔 اتخذ منصب باش تفكّر في سؤالك",
+    "🎬 مثل مشهد من مسلسل تركي",
+    "🗣️ حك قصة مضحكة من طفولتك",
+    "👑 تولي ملك/ملكة لمدة دقيقة",
+    "🎤 سوّي مقابلة مع نفسك",
+    "📢 صيح 'أنا مشهور' 3 مرات",
+    "💃 ارقص رقصة الفرح التونسية",
+    "🍚 كل ملعقة رز وأنت مغمض",
+    "🥛 اشرب لبن وأنت تقول يا لطيف",
+    "🔊 سمعني صوتك أعلى ما عندك",
+    "🎭 قلد صوت حيوان من اختيار الجماعة",
+    "🤡 حط إصبعك في أنفك وثبت",
+    "😈 غمز لشخص في الغرفة",
+    "💋 بعت قبلة هوائية لأقرب شخص",
+    "🔥 قول كلمة جريئة بصوت عالي",
+    "😏 سوّي حركة مثيرة",
+    "💕 عبر عن حبك لشخص بطريقة مضحكة",
+    "🌹 قدم وردة وهمية لشخص",
+    "💌 اكتب رسالة حب على ورق واقرأها",
+    "😳 احكي عن أول كرشة في حياتك",
+    "💪 قول 'أنا الأقوى' بصوت عالي",
+    "🕺 ارقص رقصة مثيرة 5 ثواني",
+    "🎭 مثل مشهد من فيلم رومنسي",
+    "☕ جيب القهوة للكل",
+    "🍪 وزع حلويات على الجماعة",
+    "💆 دلك كتاف الشخص اللي جمبك",
+    "🚪 افتح الباب لكل واحد يخرج",
+    "🎁 قدم هدية رمزية لشخص",
+    "🖼️ صور الجماعة كلها",
+    "🎲 ارمي الزهر وخمّن الرقم",
+    "💰 راهن على نفسك بنقطة",
+    "⭐ قول 3 أشياء تحبها في روحك",
+    "🤖 تحرك كي الروبوت 10 ثواني",
+    "🦖 مشي كي الديناصور"];
+
+const SPIN_PRIZES=[
+  {label:"💰 200 نقطة",points:200,color:"#3498db"},
+  {label:"🎁 500 نقطة",points:500,color:"#2ecc71"},
+  {label:"💎 1000 نقطة",points:1000,color:"#9b59b6"},
+  {label:"👑 2000 نقطة",points:2000,color:"#ffd700"},
+  {label:"🔥 x2 Combo",points:0,color:"#e74c3c",bonus:"x2"},
+  {label:"💔 0 نقطة",points:0,color:"#555"},
+  {label:"✨ 750 نقطة",points:750,color:"#1abc9c"},
+  {label:"🎰 JACKPOT!",points:3000,color:"#ff2d55"}
+];
+
+// ══════════════════════════════════════════════════════════
+// 🗄️ STATE
+// ══════════════════════════════════════════════════════════
+let G={
+  players:["أنت","صاحبك 1","صاحبك 2"],
+  scores:{},gems:{},votes:{},challengesDone:{},achievements:{},
+  levels:{},xp:{},streaks:{},questionsAnswered:{},
+  usedQ:{},extraUnlocked:{},
+  totalGames:0,totalVotes:0,
+  comboMult:1,comboOwner:null,comboLeft:0,
+  lastWinner:null,maxStreak:0,
+  currentCat:"friends",currentTarget:null,
+  lastSpinDate:null,lastDiceDate:null,
+  dailyStreak:0,lastLoginDate:null,
+  currentEvent:null,eventLeft:0,
+  missions:{vote10:0,streak5:0,play5:0,daily3:0},
+  missionsDone:[],
+  eliminatedPlayers:[],
+  immunePlayer:null,
+  notifBadges:{missions:true,daily:true}
+};
+
+let QUESTIONS={};
+function rebuildQ(){
+  for(let c of CAT_ORDER){
+    QUESTIONS[c]=[...BASE_Q[c]];
+    if(G.extraUnlocked[c]) QUESTIONS[c].push(...BONUS_Q);
+  }
+}
+
+function loadG(){
+  try{
+    const s=localStorage.getItem('chkoun_ultra_v2');
+    if(s){const d=JSON.parse(s);for(let k in d)if(G.hasOwnProperty(k))G[k]=d[k];}
+  }catch(e){}
+  for(let p of G.players){
+    if(G.scores[p]===undefined)G.scores[p]=0;
+    if(G.gems[p]===undefined)G.gems[p]=0;
+    if(G.votes[p]===undefined)G.votes[p]=0;
+    if(G.challengesDone[p]===undefined)G.challengesDone[p]=0;
+    if(G.achievements[p]===undefined)G.achievements[p]=[];
+    if(G.levels[p]===undefined)G.levels[p]=1;
+    if(G.xp[p]===undefined)G.xp[p]=0;
+    if(G.streaks[p]===undefined)G.streaks[p]=0;
+  }
+  for(let c of CAT_ORDER){
+    if(G.usedQ[c]===undefined)G.usedQ[c]=[];
+    if(G.extraUnlocked[c]===undefined)G.extraUnlocked[c]=false;
+  }
+  if(!G.currentTarget) G.currentTarget=G.players[0];
+  if(!G.notifBadges) G.notifBadges={missions:true,daily:true};
+  if(!G.missions) G.missions={vote10:0,streak5:0,play5:0,daily3:0};
+  if(!G.missionsDone) G.missionsDone=[];
+  if(!G.eliminatedPlayers) G.eliminatedPlayers=[];
+  
+  // daily login streak
+  const today=new Date().toISOString().slice(0,10);
+  if(G.lastLoginDate!==today){
+    const yesterday=new Date(Date.now()-86400000).toISOString().slice(0,10);
+    if(G.lastLoginDate===yesterday) G.dailyStreak=(G.dailyStreak||0)+1;
+    else G.dailyStreak=1;
+    G.lastLoginDate=today;
+    G.notifBadges.daily=true;
+  }
+  G.missions.daily3=Math.min(G.dailyStreak,3);
+  
+  rebuildQ();
+  saveG();
+}
+
+function saveG(){localStorage.setItem('chkoun_ultra_v2',JSON.stringify(G));}
+
+// ══════════════════════════════════════════════════════════
+// 🎯 HELPERS
+// ══════════════════════════════════════════════════════════
+function getQ(){
+  // 5% legendary
+  if(Math.random()<0.05) return {text:LEGENDARY_Q[Math.floor(Math.random()*LEGENDARY_Q.length)],rarity:'legendary'};
+  // 15% epic from bonus pool
+  if(Math.random()<0.15 && G.extraUnlocked[G.currentCat]) return {text:BONUS_Q[Math.floor(Math.random()*BONUS_Q.length)],rarity:'epic'};
+  
+  let list=QUESTIONS[G.currentCat]||QUESTIONS.friends;
+  let used=G.usedQ[G.currentCat]||[];
+  let avail=list.filter(q=>!used.includes(q));
+  if(!avail.length){G.usedQ[G.currentCat]=[];avail=list;}
+  let q=avail[Math.floor(Math.random()*avail.length)];
+  if(!G.usedQ[G.currentCat]) G.usedQ[G.currentCat]=[];
+  G.usedQ[G.currentCat].push(q);
+  return {text:q,rarity:'common'};
+}
+
+function getRankLabel(lvl){
+  let keys=Object.keys(RANKS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys) if(lvl>=k) return RANKS[k];
+  return RANKS[1];
+}
+
+function addXP(player,amount){
+  let xp=(G.xp[player]||0)+amount;
+  let lvl=G.levels[player]||1;
+  let gainedLevels=0;
+  while(xp>=lvl*100){xp-=lvl*100;lvl++;gainedLevels++;}
+  G.xp[player]=xp;
+  if(gainedLevels>0){
+    G.levels[player]=lvl;
+    let reward=lvl*75;
+    G.scores[player]+=reward;
+    G.gems[player]=(G.gems[player]||0)+lvl*10;
+    showLevelUp(player,lvl,reward);
+    playLevelUp();
+  }
+  saveG();
+}
+
+let toastQueue=[];
+function showToast(msg,bg='#ff2d55',dur=2000){
+  let t=document.createElement('div');
+  t.className='toast';t.innerText=msg;t.style.background=bg;
+  t.style.top=(1+toastQueue.length*3.5)+'rem';
+  document.body.appendChild(t);toastQueue.push(t);
+  setTimeout(()=>{t.remove();toastQueue=toastQueue.filter(x=>x!==t);},dur);
+}
+
+function showLevelUp(player,lvl,reward){
+  let el=document.createElement('div');
+  el.className='levelup-overlay';
+  el.innerHTML=`
+    <div class="levelup-box">
+      <div style="font-size:1rem;color:#aaa;margin-bottom:0.5rem">${player}</div>
+      <div style="font-size:2rem;margin-bottom:0.3rem">🎉 LEVEL UP!</div>
+      <div class="levelup-num">${lvl}</div>
+      <div style="color:var(--gold);font-size:1.2rem;margin-top:0.5rem">+${reward} نقطة 💎 +${lvl*10} جوهرة</div>
+      <div style="margin-top:0.5rem;color:#aaa">${getRankLabel(lvl)}</div>
+    </div>
+  `;
+  document.body.appendChild(el);
+  spawnBurst(window.innerWidth/2,window.innerHeight/2,80);
+  el.onclick=()=>el.remove();
+  setTimeout(()=>el.remove(),3000);
+}
+
+function flashJackpot(){
+  let el=document.createElement('div');
+  el.className='jackpot-flash';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),600);
+  spawnBurst(window.innerWidth/2,window.innerHeight/2,80,['#ffd700','#ff2d55','#00f5ff','#fff']);
+  playJackpot();
+}
+
+function vibrate(pattern){if(navigator.vibrate) navigator.vibrate(pattern);}
+
+function checkMissions(){
+  G.missions.vote10=Math.min(G.totalVotes,10);
+  G.missions.play5=Math.min(G.totalGames,5);
+  G.missions.streak5=Math.min(G.maxStreak,5);
+  G.missions.daily3=Math.min(G.dailyStreak,3);
+  
+  for(let m of MISSIONS_DATA){
+    if(!G.missionsDone.includes(m.id) && G.missions[m.id]>=m.max){
+      G.missionsDone.push(m.id);
+      G.scores[G.currentTarget]=(G.scores[G.currentTarget]||0)+m.reward;
+      G.gems[G.currentTarget]=(G.gems[G.currentTarget]||0)+Math.floor(m.reward/10);
+      showToast(`🎯 مهمة مكتملة! +${m.reward} نقطة 💎 +${Math.floor(m.reward/10)} جوهرة`,'#00ff87',3000);
+      flashJackpot();
+    }
+  }
+  saveG();
+}
+
+function maybeSpawnEvent(){
+  if(G.currentEvent) return;
+  if(Math.random()<0.2){// 20% chance per game
+    G.currentEvent=EVENTS[Math.floor(Math.random()*EVENTS.length)];
+    G.eventLeft=G.currentEvent.duration;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// 📱 SCREENS
+// ══════════════════════════════════════════════════════════
+let screen='home';
+let activeTab='home';
+const app=document.getElementById('appRoot');
+
+function render(){
+  if(screen==='home') renderHome();
+  else if(screen==='game') renderGame();
+  else if(screen==='leaderboard') renderLeaderboard();
+  else if(screen==='missions') renderMissions();
+  else if(screen==='players') renderPlayers();
+}
+
+function renderBottomNav(){
+  return `
+  <div class="bottom-nav">
+    <div class="nav-item ${activeTab==='home'?'active':''}" onclick="gotoTab('home')">
+      <span class="nav-icon">🏠</span><span class="nav-label">الرئيسية</span>
+    </div>
+    <div class="nav-item ${activeTab==='game'?'active':''}" onclick="gotoTab('game')">
+      <span class="nav-icon">🎮</span><span class="nav-label">اللعب</span>
+    </div>
+    <div class="nav-item ${activeTab==='leaderboard'?'active':''}" onclick="gotoTab('lb')">
+      <span class="nav-icon">🏆</span><span class="nav-label">ترتيب</span>
+    </div>
+    <div class="nav-item ${activeTab==='missions'?'active':''}" onclick="gotoTab('missions')" style="position:relative">
+      <span class="nav-icon">🎯</span><span class="nav-label">مهمات</span>
+      ${G.notifBadges.missions?'<div class="notif-dot"></div>':''}
+    </div>
+    <div class="nav-item" onclick="gotoTab('players')">
+      <span class="nav-icon">👥</span><span class="nav-label">لاعبين</span>
+    </div>
+  </div>`;
+}
+
+function gotoTab(tab){
+  playClick();
+  activeTab=tab;
+  if(tab==='home'){screen='home';}
+  else if(tab==='game'){
+    screen='game';
+    G.currentCat=G.currentCat||'friends';
+    G.totalGames++;maybeSpawnEvent();
+    G.missions.play5=Math.min(G.totalGames,5);
+    saveG();
+  }
+  else if(tab==='lb'){screen='leaderboard';}
+  else if(tab==='missions'){screen='missions';G.notifBadges.missions=false;saveG();}
+  else if(tab==='players'){screen='players';}
+  render();
+}
+
+// ──────────────────────────────────────────────────────────
+// 🏠 HOME
+// ──────────────────────────────────────────────────────────
+function renderHome(){
+  activeTab='home';
+  let sorted=[...G.players].sort((a,b)=>(G.scores[b]||0)-(G.scores[a]||0));
+  let champ=sorted[0]||G.players[0];
+  let champLvl=G.levels[champ]||1;
+  let champScore=G.scores[champ]||0;
+  let champGems=G.gems[champ]||0;
+  let totalAch=Object.values(G.achievements).reduce((s,a)=>s+a.length,0);
+  let streak=G.dailyStreak||1;
+
+  let catBtns=CAT_ORDER.map(c=>{
+    let cat=CATS[c];
+    let isHot=G.currentCat===c;
+    return `<div class="cat-btn ${isHot?'hot':''}" onclick="selectCat('${c}')" style="border-color:${cat.color}40;color:${cat.color}">
+      <span class="cat-emoji">${cat.emoji}</span>
+      <span class="cat-label">${cat.label}</span>
+      ${G.extraUnlocked[c]?'<div style="font-size:0.6rem;color:#00ff87">+20 ✓</div>':''}
+    </div>`;
+  }).join('');
+
+  app.innerHTML=`
+    <div class="top-header">
+      <div class="logo">شكون أكثر؟ 🔥</div>
+      <div style="display:flex;gap:0.5rem;align-items:center">
+        <span style="font-size:0.8rem;color:var(--gold)">📅 ${streak} يوم 🔥</span>
+        <div onclick="showSettingsMenu()" style="cursor:pointer;font-size:1.3rem;background:rgba(255,255,255,0.05);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center">☰</div>
+      </div>
+    </div>
+
+    <div class="champ-banner">
+      <div class="champ-crown">👑</div>
+      <div class="champ-name">${champ}</div>
+      <div class="champ-score">${champScore} نقطة | مستوى ${champLvl} | 💎 ${champGems}</div>
+      <div style="margin-top:0.4rem;font-size:0.8rem;background:rgba(0,0,0,0.3);border-radius:2rem;padding:0.2rem 0.8rem;display:inline-block">${getRankLabel(champLvl)}</div>
+    </div>
+
+    <div class="stats-strip">
+      <div class="stat-pill"><div class="s-val">${G.players.length}</div><div class="s-lbl">لاعبين 👥</div></div>
+      <div class="stat-pill"><div class="s-val">${G.totalGames}</div><div class="s-lbl">ألعاب 🎮</div></div>
+      <div class="stat-pill"><div class="s-val">${totalAch}</div><div class="s-lbl">إنجاز ⭐</div></div>
+      <div class="stat-pill"><div class="s-val">x${G.comboMult}</div><div class="s-lbl">مضاعف ✨</div></div>
+    </div>
+
+    <div class="section-title">اختر الفئة</div>
+    <div class="cat-grid">${catBtns}</div>
+
+    <button class="btn-primary" style="background:linear-gradient(135deg,var(--purple),#6000bb);box-shadow:0 0 20px #b040ff60;margin-bottom:0.6rem;" onclick="startRandomGame()">
+      🎲 بداية عشوائية — حظ كاملي!
+    </button>
+    <button class="btn-primary" style="background:linear-gradient(135deg,var(--accent),#c0002a);" onclick="gotoTab('game')">
+      🔥 إبدأ اللعب بـ ${CATS[G.currentCat].emoji} ${CATS[G.currentCat].label}
+    </button>
+
+    ${renderBottomNav()}
+  `;
+}
+
+function selectCat(cat){
+  playClick();
+  G.currentCat=cat;saveG();
+  renderHome();
+}
+
+function startRandomGame(){
+  playClick();
+  G.currentCat=CAT_ORDER[Math.floor(Math.random()*CAT_ORDER.length)];
+  G.totalGames++;maybeSpawnEvent();
+  G.missions.play5=Math.min(G.totalGames,5);
+  saveG();
+  screen='game';activeTab='game';
+  render();
+}
+
+// ──────────────────────────────────────────────────────────
+// 🎮 GAME SCREEN
+// ──────────────────────────────────────────────────────────
+let currentQ=null;
+let isSlotting=false;
+let gameTimerVal=30;let gameTimerInterval=null;
+
+function renderGame(){
+  screen='game';activeTab='game';
+  G.currentTarget=G.players[Math.floor(Math.random()*G.players.length)];
+  currentQ=getQ();
+  
+  let cat=CATS[G.currentCat];
+  let target=G.currentTarget;
+  let xp=G.xp[target]||0;
+  let lvl=G.levels[target]||1;
+  let xpPct=(xp/(lvl*100))*100;
+  let streak=G.streaks[target]||0;
+  let gems=G.gems[target]||0;
+  
+  let rarityBadge='';
+  if(currentQ.rarity==='legendary') rarityBadge=`<span class="badge-legendary">👑 LEGENDARY</span>`;
+  else if(currentQ.rarity==='epic') rarityBadge=`<span class="badge-epic" style="border-radius:2rem;padding:0.15rem 0.6rem;font-size:0.7rem">⚡ EPIC</span>`;
+
+  // Build vote buttons (dynamic grid)
+  let voteBtns=G.players.map(p=>{
+    let sc=G.scores[p]||0;
+    let str=G.streaks[p]||0;
+    let isElim=G.eliminatedPlayers.includes(p);
+    let isImmune=G.immunePlayer===p;
+    return `
+      <button class="vote-btn" onclick="castVote('${p}')" style="background:${cat.gradient};${isElim?'opacity:0.4;':''}">
+        <span>${p} ${isImmune?'🛡️':''} ${isElim?'<span class="elim-badge">خارج</span>':''}</span>
+        <span style="display:flex;align-items:center;gap:0.4rem">
+          ${str>=3?`<span class="hot-badge">🔥${str}</span>`:''}
+          <span class="v-score">${sc}★</span>
+        </span>
+      </button>`;
+  }).join('');
+
+  let eventHtml='';
+  if(G.currentEvent){
+    eventHtml=`<div class="event-card" onclick="dismissEvent()">
+      <div class="event-icon">${G.currentEvent.emoji}</div>
+      <div class="event-title">${G.currentEvent.title}</div>
+      <div class="event-desc">${G.currentEvent.desc}</div>
+      <div style="text-align:center;font-size:0.7rem;color:#555;margin-top:0.3rem">اضغط للإغلاق</div>
+    </div>`;
+  }
+
+  let comboHtml='';
+  if(G.comboMult>1){
+    let pct=Math.min(100,(G.streaks[G.comboOwner]||0)/5*100);
+    comboHtml=`<div class="combo-bar">
+      <div class="combo-fire">🔥</div>
+      <div class="combo-track"><div class="combo-fill" style="width:${pct}%"></div></div>
+      <div class="combo-text">COMBO x${G.comboMult}</div>
+    </div>`;
+  }
+
+  let streakFlames='';
+  if(streak>=2){
+    streakFlames=`<div class="streak-display">${Array.from({length:Math.min(streak,10)},()=>'🔥').join('')}</div>`;
+  }
+
+  app.innerHTML=`
+    <div class="top-header">
+      <div onclick="gotoTab('home')" style="cursor:pointer;font-size:1.3rem;background:rgba(255,255,255,0.05);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center">←</div>
+      <div style="background:${cat.color}20;border:1px solid ${cat.color}40;border-radius:2rem;padding:0.3rem 0.9rem;font-size:0.9rem;font-weight:700;color:${cat.color}">${cat.emoji} ${cat.label}</div>
+      <div onclick="refreshGame()" style="cursor:pointer;font-size:1.1rem;background:rgba(255,255,255,0.05);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center">↻</div>
+    </div>
+
+    <div class="stats-strip">
+      <div class="stat-pill"><div class="s-val" style="color:var(--gold)">💎 ${gems}</div><div class="s-lbl">جواهر</div></div>
+      <div class="stat-pill"><div class="s-val" style="color:var(--cyan)">✨ x${G.comboMult}</div><div class="s-lbl">مضاعف</div></div>
+      <div class="stat-pill"><div class="s-val" style="color:var(--accent)">🔥 ${streak}</div><div class="s-lbl">streak</div></div>
+      <div class="stat-pill"><div class="s-val">${G.totalGames}</div><div class="s-lbl">ألعاب</div></div>
+    </div>
+
+    ${comboHtml}
+    ${eventHtml}
+
+    <div class="target-card">
+      <div>
+        <div style="font-size:0.75rem;color:#555;margin-bottom:0.2rem">🎯 دورك</div>
+        <div class="target-name">${target}</div>
+      </div>
+      <div style="text-align:center">
+        <div class="target-badge">مستوى ${lvl}</div>
+        <div style="font-size:0.7rem;color:#555;margin-top:0.2rem">${getRankLabel(lvl)}</div>
+      </div>
+    </div>
+
+    <div class="xp-bar-wrap">
+      <div class="xp-label"><span>${xp} XP</span><span>${lvl*100} XP</span></div>
+      <div class="xp-track"><div class="xp-fill" style="width:${xpPct}%"></div></div>
+    </div>
+
+    <div class="question-box">
+      <div>
+        ${rarityBadge?'<div style="margin-bottom:0.5rem">'+rarityBadge+'</div>':''}
+        <div class="question-text ${currentQ.rarity==='legendary'?'glow-text-gold':currentQ.rarity==='epic'?'glow-text-cyan':''}">${currentQ.text}</div>
+        ${streakFlames?`<div class="mt1">${streakFlames}</div>`:''}
+      </div>
+    </div>
+
+    <div class="section-title">👇 شكون هو؟</div>
+    <div class="vote-grid">${voteBtns}</div>
+
+    <div class="action-row">
+      <div class="action-card" onclick="showChallenge()"><span class="a-icon">🎭</span><span class="a-label">تحدي</span></div>
+      <div class="action-card" onclick="showDice()"><span class="a-icon">🎲</span><span class="a-label">نرد</span></div>
+      <div class="action-card" onclick="showSpin()"><span class="a-icon">🎡</span><span class="a-label">عجلة</span></div>
+      <div class="action-card" onclick="showEliminationMode()"><span class="a-icon">💀</span><span class="a-label">إقصاء</span></div>
+    </div>
+
+    <button class="ad-btn" onclick="showAdModal()">
+      📺 شاهد إعلان 30ث ← +500 💎 + 20 سؤال جديد
+    </button>
+
+    ${renderBottomNav()}
+  `;
+
+  if(currentQ.rarity==='legendary') flashJackpot();
+}
+
+function refreshGame(){
+  playClick();
+  G.totalGames++;maybeSpawnEvent();
+  G.missions.play5=Math.min(G.totalGames,5);
+  saveG();renderGame();
+}
+
+function castVote(player){
+  if(G.eliminatedPlayers.includes(player)){showToast("⛔ هذا اللاعب خارج من اللعب!");return;}
+  
+  vibrate([20]);
+  playVote();
+  
+  let basePoints=10;
+  let mult=G.comboMult;
+  if(G.currentEvent?.id==='double') mult*=2;
+  if(G.currentEvent?.id==='jackpot') mult=3;
+  let points=basePoints*mult;
+  
+  // Jackpot 10% chance
+  let jackpot=Math.random()<0.1;
+  if(jackpot){points*=3;flashJackpot();showToast(`🎰 JACKPOT! ${player} +${points} نقطة`,'#ffd700',3000);vibrate([100,50,100]);}
+  else{showToast(`😂 ${player} +${points} نقطة`,'#00ff87');}
+  
+  G.votes[player]=(G.votes[player]||0)+1;
+  G.scores[player]=(G.scores[player]||0)+points;
+  G.totalVotes=(G.totalVotes||0)+1;
+  
+  // XP
+  addXP(player,Math.floor(points/2));
+  
+  // Streak
+  if(player===G.lastWinner){
+    G.streaks[player]=(G.streaks[player]||0)+1;
+    if(G.streaks[player]>=(G.maxStreak||0)) G.maxStreak=G.streaks[player];
+    if(G.streaks[player]>=3 && G.comboMult<4){
+      G.comboMult=Math.min(4,G.comboMult+1);
+      G.comboOwner=player;G.comboLeft=5;
+      showToast(`🔥 COMBO x${G.comboMult}! ${player} في حالة!`,'#ff7c00');
+      vibrate([50,30,50,30,50]);
+    }
+  } else {
+    G.streaks[player]=1;
+    if(G.lastWinner) G.streaks[G.lastWinner]=Math.max(0,(G.streaks[G.lastWinner]||1)-1);
+    if(G.comboMult>1){G.comboMult=1;showToast("💔 انكسر الـ combo!");}
+  }
+  G.lastWinner=player;
+  
+  // Event: steal
+  if(G.currentEvent?.id==='steal'){
+    let sorted=[...G.players].filter(p=>!G.eliminatedPlayers.includes(p)).sort((a,b)=>(G.scores[b]||0)-(G.scores[a]||0));
+    if(sorted.length>=2){
+      let top=sorted[0];let bottom=sorted[sorted.length-1];
+      let stolen=Math.min(50,G.scores[top]||0);
+      G.scores[top]-=stolen;G.scores[bottom]+=stolen;
+      showToast(`💀 سرقة! ${top} ← ${stolen} نقطة → ${bottom}`,'#ff2d55',3000);
+    }
+    G.currentEvent=null;
+  }
+  
+  // Immunity
+  if(G.currentEvent?.id==='immunity'){
+    let sorted2=[...G.players].filter(p=>!G.eliminatedPlayers.includes(p)).sort((a,b)=>(G.scores[a]||0)-(G.scores[b]||0));
+    G.immunePlayer=sorted2[0];
+    showToast(`🛡️ ${G.immunePlayer} محمي هذه الجولة!`,'#b040ff');
+    G.currentEvent=null;
+  }
+  
+  // Event countdown
+  if(G.currentEvent && G.currentEvent.duration>0){
+    G.eventLeft--;
+    if(G.eventLeft<=0) G.currentEvent=null;
+  }
+  
+  // Missions
+  G.missions.vote10=Math.min(G.totalVotes,10);
+  G.missions.streak5=Math.min(G.maxStreak||0,5);
+  checkMissions();
+  saveG();
+  
+  spawnBurst(window.innerWidth/2,window.innerHeight*.6,20,[CATS[G.currentCat].color,'#fff','var(--gold)']);
+  
+  // next round
+  setTimeout(()=>renderGame(),300);
+}
+
+function dismissEvent(){G.currentEvent=null;saveG();renderGame();}
+
+// ──────────────────────────────────────────────────────────
+// 🏆 LEADERBOARD
+// ──────────────────────────────────────────────────────────
+function renderLeaderboard(){
+  activeTab='leaderboard';
+  let sorted=[...G.players].sort((a,b)=>(G.scores[b]||0)-(G.scores[a]||0));
+  let medals=['🥇','🥈','🥉'];
+  
+  let rows=sorted.map((p,i)=>{
+    let score=G.scores[p]||0;
+    let lvl=G.levels[p]||1;
+    let gems=G.gems[p]||0;
+    let streak=G.streaks[p]||0;
+    let ach=(G.achievements[p]||[]).length;
+    let xp=G.xp[p]||0;
+    let xpPct=(xp/(lvl*100))*100;
+    
+    return `
+      <div class="card ${i===0?'card-glow-gold':i===1?'card-glow-cyan':''}" style="margin-bottom:0.6rem">
+        <div class="flex-b" style="margin-bottom:0.5rem">
+          <div style="display:flex;align-items:center;gap:0.7rem">
+            <span style="font-size:1.5rem;width:2rem">${medals[i]||('#'+(i+1))}</span>
+            <div>
+              <div style="font-weight:900;font-size:1rem">${p}</div>
+              <div style="font-size:0.7rem;color:#555">${getRankLabel(lvl)}</div>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div class="lb-score">${score}</div>
+            <div style="font-size:0.7rem;color:#555">نقطة</div>
+          </div>
+        </div>
+        <div class="stats-strip" style="margin-bottom:0.5rem">
+          <div class="stat-pill"><div class="s-val">Lv${lvl}</div><div class="s-lbl">مستوى</div></div>
+          <div class="stat-pill"><div class="s-val" style="color:var(--gold)">💎${gems}</div><div class="s-lbl">جواهر</div></div>
+          <div class="stat-pill"><div class="s-val" style="color:var(--accent)">🔥${streak}</div><div class="s-lbl">streak</div></div>
+          <div class="stat-pill"><div class="s-val">⭐${ach}</div><div class="s-lbl">إنجاز</div></div>
+        </div>
+        <div class="xp-bar-wrap" style="margin-bottom:0">
+          <div class="xp-label"><span>XP: ${xp}/${lvl*100}</span></div>
+          <div class="xp-track"><div class="xp-fill" style="width:${xpPct}%"></div></div>
+        </div>
+      </div>`;
+  }).join('');
+  
+  app.innerHTML=`
+    <div class="top-header">
+      <div class="logo">🏆 الترتيب</div>
+      <button onclick="resetScores()" style="background:rgba(255,45,85,0.15);border:1px solid var(--accent)40;border-radius:2rem;padding:0.3rem 0.8rem;color:var(--accent);font-size:0.75rem">🔄 إعادة</button>
+    </div>
+    ${rows}
+    ${renderBottomNav()}
+  `;
+}
+
+// ──────────────────────────────────────────────────────────
+// 🎯 MISSIONS
+// ──────────────────────────────────────────────────────────
+function renderMissions(){
+  activeTab='missions';
+  let missionItems=MISSIONS_DATA.map(m=>{
+    let prog=G.missions[m.id]||0;
+    let done=G.missionsDone.includes(m.id);
+    let pct=(prog/m.max)*100;
+    return `
+      <div class="mission-item">
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:0.9rem;${done?'color:#555;text-decoration:line-through':''}">${m.label}</div>
+          <div class="mission-progress mt1"><div class="mission-fill" style="width:${pct}%"></div></div>
+          <div style="font-size:0.7rem;color:#444;margin-top:0.2rem">${prog}/${m.max}</div>
+        </div>
+        <div class="mission-reward">${done?'✅':'+'+m.reward+'★'}</div>
+      </div>`;
+  }).join('');
+
+  let achHtml=G.players.map(p=>{
+    let achs=G.achievements[p]||[];
+    return achs.length?`<div style="margin-bottom:0.4rem;font-size:0.85rem"><strong>${p}</strong>: ${achs.map(a=>a==='first_vote'?'🎯 أول اتهام':a==='five_votes'?'⭐ نجم':a==='rich'?'💰 غني':'').join(' ')}</div>`:'';
+  }).join('');
+
+  app.innerHTML=`
+    <div class="top-header">
+      <div class="logo">🎯 المهمات والإنجازات</div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">📅 مهمات يومية</div>
+      ${missionItems}
+      <div class="text-dim" style="margin-top:0.5rem;font-size:0.7rem;text-align:center">تجدد كل يوم | ${G.dailyStreak||1} يوم متتالي 🔥</div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">⭐ إنجازات اللاعبين</div>
+      ${achHtml||'<div class="text-dim">العب أكثر للحصول على إنجازات!</div>'}
+    </div>
+
+    <div class="card card-glow-gold">
+      <div class="section-title">🔮 أحداث عشوائية</div>
+      ${EVENTS.map(e=>`<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem">
+        <span style="font-size:1.2rem">${e.emoji}</span>
+        <div><div style="font-size:0.85rem;font-weight:700">${e.title}</div><div class="text-dim">${e.desc}</div></div>
+      </div>`).join('')}
+    </div>
+
+    ${renderBottomNav()}
+  `;
+}
+
+// ──────────────────────────────────────────────────────────
+// 👥 PLAYERS
+// ──────────────────────────────────────────────────────────
+function renderPlayers(){
+  activeTab='players';
+  let fields=G.players.map((p,i)=>`
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+      <span style="font-size:1rem;width:1.5rem;color:#555">${i+1}</span>
+      <input id="pn_${i}" value="${p}" style="flex:1;background:#0d0d20;border:1px solid rgba(255,255,255,0.1);border-radius:2rem;padding:0.5rem 1rem;color:white;font-family:Tajawal,sans-serif;font-size:0.9rem;text-align:center">
+      <button onclick="delPlayer(${i})" style="background:rgba(255,45,85,0.2);border:1px solid var(--accent)40;border-radius:50%;width:32px;height:32px;color:var(--accent);">✕</button>
+    </div>`).join('');
+
+  app.innerHTML=`
+    <div class="top-header">
+      <div class="logo">👥 اللاعبون</div>
+      <span class="text-dim">${G.players.length}/10</span>
+    </div>
+
+    <div class="card">
+      ${fields}
+      <button onclick="addPlayer()" class="btn-primary" style="background:linear-gradient(135deg,var(--green),#00cc66);margin-top:0.5rem" ${G.players.length>=10?'disabled':''}>
+        ➕ إضافة لاعب
+      </button>
+    </div>
+    <button onclick="savePlayers()" class="btn-primary">💾 حفظ التغييرات</button>
+
+    ${renderBottomNav()}
+  `;
+}
+
+function addPlayer(){
+  if(G.players.length>=10){showToast("الحد 10 لاعبين",'#ff2d55');return;}
+  G.players.push(`لاعب ${G.players.length+1}`);
+  let p=G.players[G.players.length-1];
+  G.scores[p]=0;G.gems[p]=0;G.votes[p]=0;
+  G.challengesDone[p]=0;G.achievements[p]=[];
+  G.levels[p]=1;G.xp[p]=0;G.streaks[p]=0;
+  saveG();renderPlayers();
+}
+
+function delPlayer(idx){
+  if(G.players.length<=2){showToast("يجب بقاء لاعبين على الأقل");return;}
+  let removed=G.players.splice(idx,1)[0];
+  ['scores','gems','votes','challengesDone','achievements','levels','xp','streaks'].forEach(k=>delete G[k][removed]);
+  saveG();renderPlayers();
+}
+
+function savePlayers(){
+  for(let i=0;i<G.players.length;i++){
+    let inp=document.getElementById(`pn_${i}`);
+    if(inp&&inp.value&&inp.value!==G.players[i]){
+      let old=G.players[i];let nn=inp.value;
+      G.players[i]=nn;
+      ['scores','gems','votes','challengesDone','achievements','levels','xp','streaks'].forEach(k=>{G[k][nn]=G[k][old];delete G[k][old];});
+    }
+  }
+  saveG();showToast("✅ تم الحفظ",'#00ff87');
+  screen='home';activeTab='home';render();
+}
+
+function resetScores(){
+  if(!confirm("إعادة تعيين كل النقاط؟")) return;
+  G.players.forEach(p=>{G.scores[p]=0;G.votes[p]=0;G.streaks[p]=0;G.gems[p]=0;G.achievements[p]=[];G.levels[p]=1;G.xp[p]=0;});
+  G.comboMult=1;G.lastWinner=null;G.totalGames=0;G.totalVotes=0;
+  G.missionsDone=[];G.missions={vote10:0,streak5:0,play5:0,daily3:0};
+  G.eliminatedPlayers=[];
+  saveG();showToast("🔄 تم الإعادة",'#ff2d55');renderLeaderboard();
+}
+
+// ──────────────────────────────────────────────────────────
+// 🎭 MODALS
+// ──────────────────────────────────────────────────────────
+function mkModal(inner){
+  let m=document.createElement('div');
+  m.className='modal';m.innerHTML=`<div class="modal-box">${inner}</div>`;
+  document.body.appendChild(m);return m;
+}
+function closeModal(m){if(m){m.remove();}}
+
+// CHALLENGE
+function showChallenge(){
+  playClick();
+  let ch=CHALLENGES[Math.floor(Math.random()*CHALLENGES.length)];
+  let pts=50*G.comboMult;
+  let m=mkModal(`
+    <div class="text-center">
+      <div style="font-size:0.9rem;color:#555;margin-bottom:0.5rem">🎭 تحدي!</div>
+      <div style="font-size:1.3rem;font-weight:900;margin-bottom:1rem">${ch}</div>
+      <div style="color:var(--gold);margin-bottom:1rem">⭐ المكافأة: ${pts} نقطة</div>
+      <div style="display:flex;gap:0.5rem;justify-content:center">
+        <button onclick="completeChallenge(${pts},this)" class="btn-primary" style="width:auto;padding:0.6rem 1.4rem">✅ تم!</button>
+        <button onclick="this.closest('.modal').remove()" style="background:rgba(255,255,255,0.08);border-radius:3rem;padding:0.6rem 1.4rem;color:white;">إلغاء</button>
+      </div>
+    </div>`);
+}
+function completeChallenge(pts,btn){
+  G.challengesDone[G.currentTarget]=(G.challengesDone[G.currentTarget]||0)+1;
+  G.scores[G.currentTarget]=(G.scores[G.currentTarget]||0)+pts;
+  addXP(G.currentTarget,Math.floor(pts/2));
+  saveG();showToast(`🎭 ${G.currentTarget} +${pts} نقطة`,'#00ff87');
+  btn.closest('.modal').remove();renderGame();
+}
+
+// DICE
+function showDice(){
+  playClick();
+  let today=new Date().toISOString().slice(0,10);
+  if(G.lastDiceDate===today){showToast("⏰ النرد مرة واحدة يومياً!",'#ff2d55');return;}
+  G.lastDiceDate=today;saveG();
+  
+  let faces=['⚀','⚁','⚂','⚃','⚄','⚅'];
+  let result=Math.floor(Math.random()*6)+1;
+  let pts=result*30*G.comboMult;
+  let special='';
+  if(result===6){pts+=200;special='🎉 +200 إضافية! AMAZING!';flashJackpot();}
+  else if(result===1){pts=15;special='😅 حظ سيئ! 15 نقطة فقط';}
+  
+  G.scores[G.currentTarget]=(G.scores[G.currentTarget]||0)+pts;
+  addXP(G.currentTarget,Math.floor(pts/2));
+  saveG();playDice();
+  
+  let m=mkModal(`
+    <div class="text-center">
+      <div style="font-size:4rem;margin:0.5rem 0;animation:crownFloat 1s ease-in-out infinite">${faces[result-1]}</div>
+      <div style="font-size:2rem;font-weight:900">${result}</div>
+      <div style="color:var(--green);font-size:1.1rem;margin:0.5rem 0">+${pts} نقطة</div>
+      ${special?`<div style="color:var(--gold);font-size:0.9rem">${special}</div>`:''}
+      <button onclick="this.closest('.modal').remove();renderGame();" class="btn-primary" style="margin-top:1rem">متابعة 🎮</button>
+    </div>`);
+}
+
+// SPIN WHEEL
+function showSpin(){
+  playClick();
+  let today=new Date().toISOString().slice(0,10);
+  if(G.lastSpinDate===today){showToast("⏰ العجلة مرة واحدة يومياً!",'#ff2d55');return;}
+  
+  let m=mkModal(`
+    <div class="text-center">
+      <div style="font-size:1rem;font-weight:900;margin-bottom:1rem;color:var(--gold)">🎡 عجلة الحظ</div>
+      <canvas id="wheelCanvas" width="230" height="230" style="border-radius:50%;display:block;margin:0 auto;cursor:pointer"></canvas>
+      <button id="spinBtn" class="btn-primary" style="margin-top:1rem">🎯 أدوّر!</button>
+    </div>`);
+  
+  setTimeout(()=>{
+    drawWheel(0);
+    document.getElementById('spinBtn').onclick=()=>doSpin(m);
+  },100);
+}
+
+function drawWheel(angle){
+  const canvas=document.getElementById('wheelCanvas');if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const cx=115,cy=115,r=110;
+  const slices=SPIN_PRIZES.length;
+  const sliceAngle=2*Math.PI/slices;
+  ctx.clearRect(0,0,230,230);
+  for(let i=0;i<slices;i++){
+    ctx.beginPath();ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,angle+i*sliceAngle,angle+(i+1)*sliceAngle);
+    ctx.closePath();ctx.fillStyle=SPIN_PRIZES[i].color;ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1;ctx.stroke();
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(angle+(i+0.5)*sliceAngle);
+    ctx.textAlign='right';ctx.fillStyle='#fff';ctx.font='bold 11px Tajawal,sans-serif';
+    ctx.fillText(SPIN_PRIZES[i].label,r-8,4);ctx.restore();
+  }
+  // pointer
+  ctx.beginPath();ctx.moveTo(cx+r+5,cy);ctx.lineTo(cx+r-15,cy-8);ctx.lineTo(cx+r-15,cy+8);
+  ctx.closePath();ctx.fillStyle='#ff2d55';ctx.fill();
+}
+
+function doSpin(modal){
+  let spinBtn=document.getElementById('spinBtn');
+  if(spinBtn) spinBtn.disabled=true;
+  let today=new Date().toISOString().slice(0,10);
+  G.lastSpinDate=today;
+  
+  let targetIdx=Math.floor(Math.random()*SPIN_PRIZES.length);
+  let spins=5+Math.random()*5;
+  let totalAngle=spins*2*Math.PI+(2*Math.PI*(SPIN_PRIZES.length-targetIdx)/SPIN_PRIZES.length);
+  let startTime=null;let dur=3000;let startAngle=0;
+  
+  function animSpin(ts){
+    if(!startTime) startTime=ts;
+    let t=Math.min((ts-startTime)/dur,1);
+    let eased=1-Math.pow(1-t,3);
+    let angle=startAngle+totalAngle*eased;
+    drawWheel(angle);
+    if(t<1){requestAnimationFrame(animSpin);}
+    else{
+      let prize=SPIN_PRIZES[targetIdx];
+      G.scores[G.currentTarget]=(G.scores[G.currentTarget]||0)+prize.points;
+      if(prize.bonus==='x2') G.comboMult=2;
+      addXP(G.currentTarget,Math.floor(prize.points/2));
+      saveG();
+      if(prize.label.includes('JACKPOT')) flashJackpot();
+      
+      let m2=mkModal(`
+        <div class="text-center">
+          <div style="font-size:3rem;margin:0.5rem 0">🎡</div>
+          <div style="font-size:1.5rem;font-weight:900;color:${prize.color}">${prize.label}</div>
+          ${prize.points?`<div style="color:var(--green);margin-top:0.5rem">+${prize.points} نقطة</div>`:''}
+          ${prize.bonus?`<div style="color:var(--cyan);margin-top:0.5rem">${prize.bonus} مفعّل!</div>`:''}
+          <button onclick="this.closest('.modal').remove();renderGame();" class="btn-primary" style="margin-top:1rem">رائع! 🎉</button>
+        </div>`);
+      modal.remove();
+      spawnBurst(window.innerWidth/2,window.innerHeight/2,50);
+    }
+  }
+  requestAnimationFrame(animSpin);
+}
+
+// ELIMINATION MODE
+function showEliminationMode(){
+  playClick();
+  let eligible=G.players.filter(p=>!G.eliminatedPlayers.includes(p));
+  let sorted=[...eligible].sort((a,b)=>(G.scores[a]||0)-(G.scores[b]||0));
+  let loser=sorted[0];
+  let loserScore=G.scores[loser]||0;
+  let punishment=CHALLENGES[Math.floor(Math.random()*CHALLENGES.length)];
+  
+  let m=mkModal(`
+    <div class="text-center">
+      <div style="color:var(--accent);font-size:1.2rem;font-weight:900;margin-bottom:0.5rem">💀 وضع الإقصاء!</div>
+      <div class="punishment-card">
+        <div style="font-size:1rem;margin-bottom:0.5rem">الأخير في الترتيب:</div>
+        <div style="font-size:1.4rem;font-weight:900;color:var(--accent)">${loser}</div>
+        <div style="font-size:0.85rem;color:#aaa">${loserScore} نقطة</div>
+      </div>
+      <div style="margin:1rem 0;padding:0.8rem;background:rgba(255,45,85,0.1);border-radius:1rem">
+        <div style="font-size:0.8rem;color:#555;margin-bottom:0.4rem">العقوبة:</div>
+        <div style="font-weight:700">${punishment}</div>
+      </div>
+      <div style="display:flex;gap:0.5rem;justify-content:center">
+        <button onclick="eliminatePlayer('${loser}',this)" style="background:linear-gradient(135deg,#ff2d55,#c00020);border-radius:3rem;padding:0.6rem 1.2rem;color:white;font-weight:900;font-family:Tajawal,sans-serif">💀 إقصاء</button>
+        <button onclick="this.closest('.modal').remove()" style="background:rgba(255,255,255,0.08);border-radius:3rem;padding:0.6rem 1.2rem;color:white;font-family:Tajawal,sans-serif">إلغاء</button>
+      </div>
+      <button onclick="restoreAll(this)" style="margin-top:0.5rem;background:rgba(0,255,135,0.1);border:1px solid var(--green)40;border-radius:3rem;padding:0.4rem 1rem;color:var(--green);font-family:Tajawal,sans-serif;font-size:0.8rem;width:100%">↩️ استعادة جميع اللاعبين</button>
+    </div>`);
+}
+function eliminatePlayer(p,btn){
+  G.eliminatedPlayers.push(p);saveG();
+  showToast(`💀 ${p} خرج من اللعب!`,'#ff2d55');
+  btn.closest('.modal').remove();renderGame();
+}
+function restoreAll(btn){G.eliminatedPlayers=[];saveG();showToast("✅ تم استعادة الجميع",'#00ff87');btn.closest('.modal').remove();}
+
+// AD MODAL
+function showAdModal(){
+  playClick();
+  if(G.extraUnlocked[G.currentCat]){
+    showToast("✅ هذه الفئة مفتوحة بالفعل!");return;
+  }
+  let timer=30;
+  let m=mkModal(`
+    <div class="text-center">
+      <div style="font-size:1rem;font-weight:900;margin-bottom:0.8rem;color:var(--gold)">📺 إعلان</div>
+      <div id="adTimerNum" style="font-size:3.5rem;font-weight:900;color:var(--cyan)">30</div>
+      <div style="color:#555;font-size:0.85rem;margin-bottom:0.8rem">شاهد للحصول على المكافأة</div>
+      <div class="xp-track" style="height:8px;margin-bottom:1rem"><div id="adProg" class="xp-fill" style="width:0%"></div></div>
+      <div style="color:#aaa;font-size:0.85rem">💎 +500 جوهرة<br>📚 +20 سؤال جديد لـ ${CATS[G.currentCat].label}</div>
+      <button id="adClose" class="btn-primary" style="margin-top:1rem;display:none">🎁 استلام المكافأة!</button>
+    </div>`);
+  
+  let iv=setInterval(()=>{
+    timer--;
+    let tEl=document.getElementById('adTimerNum');
+    let pEl=document.getElementById('adProg');
+    let cEl=document.getElementById('adClose');
+    if(!tEl){clearInterval(iv);return;}
+    tEl.textContent=timer;
+    if(pEl) pEl.style.width=((30-timer)/30*100)+'%';
+    if(timer<=0){
+      clearInterval(iv);
+      if(tEl) tEl.textContent='✅';
+      G.gems[G.currentTarget]=(G.gems[G.currentTarget]||0)+500;
+      G.extraUnlocked[G.currentCat]=true;
+      rebuildQ();G.usedQ[G.currentCat]=[];saveG();
+      showToast(`🎉 فتحت 20 سؤال جديد لـ ${CATS[G.currentCat].label}!`,'#00ff87',3000);
+      showToast('💎 +500 جوهرة!','#ffd700');
+      if(cEl){cEl.style.display='block';cEl.onclick=()=>{m.remove();renderGame();};}
+    }
+  },1000);
+}
+
+// SETTINGS
+function showSettingsMenu(){
+  playClick();
+  let m=mkModal(`
+    <div>
+      <div style="font-size:1.1rem;font-weight:900;text-align:center;margin-bottom:1rem;color:var(--accent)">📋 الإعدادات</div>
+      <div onclick="showStats(this)" class="menu-item" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:1rem;padding:0.8rem;display:flex;align-items:center;gap:0.7rem;cursor:pointer;margin-bottom:0.5rem">
+        <span style="font-size:1.3rem">📊</span><span>الإحصائيات</span>
+      </div>
+      <div onclick="showPrivacy(this)" class="menu-item" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:1rem;padding:0.8rem;display:flex;align-items:center;gap:0.7rem;cursor:pointer;margin-bottom:0.5rem">
+        <span style="font-size:1.3rem">📜</span><span>سياسة الخصوصية</span>
+      </div>
+      <div onclick="resetScores();this.closest('.modal').remove()" class="menu-item" style="background:rgba(255,45,85,0.08);border:1px solid var(--accent)30;border-radius:1rem;padding:0.8rem;display:flex;align-items:center;gap:0.7rem;cursor:pointer;margin-bottom:0.5rem;color:var(--accent)">
+        <span style="font-size:1.3rem">🔄</span><span>إعادة تعيين</span>
+      </div>
+      <button onclick="this.closest('.modal').remove()" style="background:rgba(255,255,255,0.05);border-radius:3rem;padding:0.6rem;width:100%;color:white;font-family:Tajawal,sans-serif;font-weight:700;margin-top:0.5rem">❌ إغلاق</button>
+    </div>`);
+}
+function showStats(el){
+  let total=Object.values(G.scores).reduce((s,v)=>s+v,0);
+  let mostV=G.players.reduce((a,b)=>(G.votes[a]||0)>(G.votes[b]||0)?a:b,G.players[0]);
+  alert(`📊 إحصائيات\n\nألعاب: ${G.totalGames}\nأصوات: ${G.totalVotes}\nنقاط إجمالية: ${total}\nأكثر متهم: ${mostV} (${G.votes[mostV]||0})\nأعلى combo: x${G.comboMult}\nأيام متتالية: ${G.dailyStreak||1}`);
+}
+function showPrivacy(el){
+  alert("📜 سياسة الخصوصية\n\n• لا نجمع معلومات شخصية\n• الحفظ محلي فقط على جهازك\n• يمكن حذف البيانات في أي وقت\n• لعبة تونسية 100% 🇹🇳");
+}
+
+// ══════════════════════════════════════════════════════════
+// 🚀 START
+// ══════════════════════════════════════════════════════════
+loadG();
+render();
+</script>
+</body>
+</html>
