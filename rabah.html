@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🔥 شكون أكثر واحد؟ - ONLINE ULTRA</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<style>
+:root {
+  --bg: #050510;
+  --card: #0d0d20;
+  --card2: #12122a;
+  --accent: #ff2d55;
+  --cyan: #00f5ff;
+  --gold: #ffd700;
+  --purple: #b040ff;
+  --green: #00ff87;
+  --orange: #ff7c00;
+  --glow-accent: 0 0 20px #ff2d5580, 0 0 40px #ff2d5540;
+  --glow-cyan: 0 0 20px #00f5ff80, 0 0 40px #00f5ff40;
+  --glow-gold: 0 0 20px #ffd70080, 0 0 40px #ffd90050;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow-x:hidden;}
+body{
+  background:var(--bg);
+  font-family:'Tajawal',sans-serif;
+  color:#fff;
+  min-height:100vh;
+}
+body::before{
+  content:'';
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.4;
+}
+body::after{
+  content:'';
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background-image:
+    linear-gradient(rgba(0,245,255,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,245,255,0.03) 1px,transparent 1px);
+  background-size:40px 40px;
+  animation:gridMove 20s linear infinite;
+  pointer-events:none;z-index:0;
+}
+@keyframes gridMove{from{background-position:0 0}to{background-position:40px 40px}}
+canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+#appRoot{position:relative;z-index:2;max-width:520px;width:100%;margin:0 auto;padding:1rem 0.8rem 5rem;min-height:100vh;}
+
+/* Cards & Buttons */
+.card{background:var(--card);border-radius:1.2rem;padding:1rem;margin-bottom:0.8rem;border:1px solid rgba(255,255,255,0.07);position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.03) 0%,transparent 60%);pointer-events:none;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#c0002a);color:white;padding:0.8rem 1rem;border-radius:3rem;width:100%;font-size:1rem;font-weight:900;box-shadow:var(--glow-accent);transition:all .15s;margin-bottom:0.6rem;border:none;cursor:pointer;font-family:'Tajawal',sans-serif;}
+.btn-primary:active{transform:scale(0.95);}
+.btn-secondary{background:linear-gradient(135deg,var(--purple),#6000bb);color:white;padding:0.8rem 1rem;border-radius:3rem;width:100%;font-size:1rem;font-weight:900;border:none;cursor:pointer;font-family:'Tajawal',sans-serif;margin-bottom:0.6rem;}
+.btn-secondary:active{transform:scale(0.95);}
+.room-code{background:linear-gradient(135deg,#1a1a30,#0d0d20);border:2px dashed var(--gold);border-radius:1.5rem;padding:1rem;text-align:center;margin-bottom:1rem;}
+.room-code .code{font-size:2rem;font-weight:900;color:var(--gold);letter-spacing:4px;font-family:monospace;}
+.players-list{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1rem;}
+.player-chip{background:var(--card2);border-radius:2rem;padding:0.4rem 0.8rem;font-size:0.85rem;display:flex;align-items:center;gap:0.3rem;}
+.player-chip.host{background:linear-gradient(135deg,#ffd70020,#ff7c0020);border:1px solid var(--gold);}
+.player-chip.you{background:linear-gradient(135deg,#00f5ff20,#00ff8720);border:1px solid var(--cyan);}
+.waiting-spinner{text-align:center;padding:2rem;}
+.spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,0.1);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 1rem;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;top:1rem;left:50%;transform:translateX(-50%);border-radius:3rem;font-weight:900;z-index:999;white-space:nowrap;font-size:0.9rem;padding:0.6rem 1.4rem;animation:toastIn .3s cubic-bezier(.34,1.56,.64,1);box-shadow:0 4px 20px rgba(0,0,0,0.5);background:#ff2d55;color:white;}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(-20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.vote-btn{background:linear-gradient(135deg,#2ecc71,#27ae60);padding:0.8rem 0.5rem;border-radius:1rem;font-size:1rem;font-weight:900;color:white;cursor:pointer;border:none;display:flex;align-items:center;justify-content:space-between;padding-left:1rem;padding-right:1rem;margin-bottom:0.5rem;width:100%;}
+.vote-btn:active{transform:scale(0.96);}
+.role-badge{background:rgba(255,45,85,0.2);border-radius:1rem;padding:0.2rem 0.6rem;font-size:0.7rem;color:var(--accent);display:inline-block;}
+.question-box{background:linear-gradient(135deg,#0d0d25,#150d20);border:1px solid var(--cyan)30;border-radius:1.5rem;padding:1.2rem;text-align:center;margin-bottom:0.8rem;box-shadow:var(--glow-cyan);}
+.question-text{font-size:1.1rem;font-weight:700;line-height:1.5;}
+.waiting-turn{background:rgba(0,0,0,0.5);border-radius:1rem;padding:1rem;text-align:center;color:#aaa;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(5,5,16,0.95);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-around;padding:0.6rem 0 0.8rem;z-index:10;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:0.1rem;cursor:pointer;padding:0.3rem 1rem;transition:all .15s;color:#444;font-family:'Tajawal',sans-serif;border-radius:0.8rem;}
+.nav-item.active{color:var(--accent);}
+.nav-icon{font-size:1.3rem;}
+.nav-label{font-size:0.6rem;font-weight:700;}
+.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem;}
+.modal-box{background:linear-gradient(145deg,#0d0d20,#150d20);border-radius:1.5rem;padding:1.5rem;width:100%;max-width:360px;border:1px solid rgba(255,255,255,0.1);}
+input{background:#0d0d20;border:1px solid rgba(255,255,255,0.1);border-radius:2rem;padding:0.8rem 1rem;color:white;font-family:'Tajawal',sans-serif;font-size:1rem;width:100%;margin-bottom:0.8rem;text-align:center;}
+input:focus{outline:none;border-color:var(--accent);}
+.flex-c{display:flex;align-items:center;justify-content:center;}
+.flex-b{display:flex;align-items:center;justify-content:space-between;}
+.text-center{text-align:center;}
+.mt2{margin-top:0.8rem;}
+.mb2{margin-bottom:0.8rem;}
+.text-dim{color:#888;font-size:0.75rem;}
+.text-gold{color:var(--gold);}
+.score-display{font-weight:900;color:var(--gold);}
+.section-title{font-size:0.7rem;color:#666;margin-bottom:0.3rem;letter-spacing:1px;}
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div id="appRoot"></div>
+
+<script>
+// ============================================================
+// 🔥 FIREBASE CONFIGURATION - Your Project
+// ============================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyDl-KwQqehimX71iYzNXgZ3gF6bj4so7nY",
+  authDomain: "tnassnis-1021a.firebaseapp.com",
+  databaseURL: "https://tnassnis-1021a-default-rtdb.europe-west1.firebasedatabase.app/",
+  projectId: "tnassnis-1021a",
+  storageBucket: "tnassnis-1021a.firebasestorage.app",
+  messagingSenderId: "598196776278",
+  appId: "1:598196776278:android:5a84ed8ec06ece8923faf7"
+};
+
+// Initialize Firebase
+let database = null;
+let firebaseAvailable = false;
+
+try {
+  const app = firebase.initializeApp(firebaseConfig);
+  database = firebase.database(app);
+  firebaseAvailable = true;
+  console.log('✅ Firebase connected successfully!');
+} catch(e) {
+  console.warn('⚠️ Firebase init failed:', e);
+  firebaseAvailable = false;
+}
+
+// ============================================================
+// 🎮 GAME STATE
+// ============================================================
+let G = {
+  roomId: null,
+  playerId: null,
+  playerName: null,
+  isHost: false,
+  players: [],
+  scores: {},
+  currentTurn: null,
+  currentQuestion: null,
+  currentCategory: 'friends',
+  waitingForVote: false,
+  gameActive: false,
+  roundEndTime: null,
+  myVoteCast: false,
+  roundResults: null,
+  votes: {}
+};
+
+let currentScreen = 'lobby';
+let playerNameInput = '';
+let roomCodeInput = '';
+
+// ============================================================
+// 🎨 PARTICLE ENGINE
+// ============================================================
+const pCanvas = document.getElementById('particles');
+const pCtx = pCanvas.getContext('2d');
+let pParticles = [];
+
+function resizeCanvas(){
+  pCanvas.width = window.innerWidth;
+  pCanvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Particle{
+  constructor(x, y, color){
+    this.x = x || Math.random() * pCanvas.width;
+    this.y = y || Math.random() * pCanvas.height;
+    this.vx = (Math.random() - 0.5) * 0.5;
+    this.vy = (Math.random() - 0.5) * 0.5;
+    this.alpha = Math.random() * 0.4 + 0.1;
+    this.size = Math.random() * 2 + 0.5;
+    this.color = color || `hsl(${Math.random() * 360}, 100%, 70%)`;
+    this.life = 1;
+    this.decay = 0.003;
+  }
+  update(){
+    this.x += this.vx;
+    this.y += this.vy;
+    this.life -= this.decay;
+    this.alpha = this.life;
+  }
+  draw(){
+    pCtx.save();
+    pCtx.globalAlpha = this.alpha;
+    pCtx.fillStyle = this.color;
+    pCtx.beginPath();
+    pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    pCtx.fill();
+    pCtx.restore();
+  }
+}
+
+for(let i = 0; i < 30; i++) pParticles.push(new Particle());
+
+function animateParticles(){
+  requestAnimationFrame(animateParticles);
+  pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+  pParticles = pParticles.filter(p => p.life > 0);
+  while(pParticles.length < 30) pParticles.push(new Particle());
+  pParticles.forEach(p => { p.update(); p.draw(); });
+}
+animateParticles();
+
+function spawnBurst(x, y){
+  for(let i = 0; i < 30; i++){
+    pParticles.push(new Particle(x, y, `hsl(${Math.random() * 360}, 100%, 60%)`));
+  }
+}
+
+function showToast(msg, bg = '#ff2d55', dur = 2000){
+  let t = document.createElement('div');
+  t.className = 'toast';
+  t.innerText = msg;
+  t.style.background = bg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), dur);
+}
+
+function playClick(){
+  if(navigator.vibrate) navigator.vibrate(20);
+}
+
+// ============================================================
+// 📚 QUESTIONS DATABASE
+// ============================================================
+const CATEGORIES = {
+  friends: { emoji: "👬", label: "الصحاب", color: "#f39c12", gradient: "linear-gradient(135deg,#f39c12,#e67e22)" },
+  family: { emoji: "👨‍👩‍👧‍👦", label: "العايلة", color: "#2ecc71", gradient: "linear-gradient(135deg,#2ecc71,#27ae60)" },
+  couples: { emoji: "💑", label: "الكوبل", color: "#e84393", gradient: "linear-gradient(135deg,#e84393,#c0392b)" },
+  lovers: { emoji: "💕", label: "الحبايب", color: "#9b59b6", gradient: "linear-gradient(135deg,#9b59b6,#6c3483)" },
+  spicy: { emoji: "🔥", label: "جريء", color: "#e74c3c", gradient: "linear-gradient(135deg,#e74c3c,#c0392b)" }
+};
+
+const QUESTIONS = {
+  friends: [
+    "شكون أكثر واحد يڨول 'أنا جاي' وهو مازال في الدار؟ 😂",
+    "شكون أكثر واحد يصرف فلوسو في القهوة؟ ☕",
+    "شكون اللي يضحك وحدو؟ 😅",
+    "شكون اللي يكذب أكثر في المجموعة؟ 🤥",
+    "شكون اللي دايمن يتأخر؟ ⏰",
+    "شكون اللي ياكل ماكلة الغير بدون ما يطلب؟ 🍕"
+  ],
+  family: [
+    "شكون أكثر واحد ياكل في الدار؟ 🍲",
+    "شكون أكثر واحد يسرق من الثلاجة بالليل؟ 😂",
+    "شكون اللي دايمن يسبّت الضو وقت يخرج؟ 💡",
+    "شكون اللي ياكل أكثر في الدار؟ 🍽️"
+  ],
+  couples: [
+    "شكون أكثر واحد يغير؟ 😏",
+    "شكون أكثر واحد يقول 'وينك؟' كل شوي؟ 📱",
+    "شكون اللي يأخذ أكثر مكان في القاعدة؟ 🛏️",
+    "شكون اللي دايمن يختار الرستوران؟ 🍽️"
+  ],
+  lovers: [
+    "شكون أكثر واحد يعمل flirt؟ 😏",
+    "شكون أكثر واحد يحب الكلام الجريء؟ 😂",
+    "شكون اللي أرومانسي أكثر فيكم الاثنين؟ 💑",
+    "شكون اللي يبعت أكثر رسايل حبّ؟ 💌"
+  ],
+  spicy: [
+    "شكون أكثر واحد عنده خبرة؟ 🔥",
+    "شكون أكثر واحد يبدا أول؟ 😈",
+    "شكون اللي يكثر يخطط للقاءات سرية؟ 🤫",
+    "شكون اللي دايمن يحب التجديد في العلاقة؟ 🔄"
+  ]
+};
+
+function getRandomQuestion(category){
+  const qList = QUESTIONS[category] || QUESTIONS.friends;
+  return qList[Math.floor(Math.random() * qList.length)];
+}
+
+function getRandomCategory(){
+  const keys = Object.keys(CATEGORIES);
+  return keys[Math.floor(Math.random() * keys.length)];
+}
+
+// ============================================================
+// 🔥 FIREBASE DATABASE FUNCTIONS
+// ============================================================
+
+function generateRoomId(){
+  return Math.random().toString(36).substring(2, 8).toUpperCase();
+}
+
+function generatePlayerId(){
+  return 'p_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+}
+
+function createRoom(){
+  const name = document.getElementById('playerNameInput')?.value.trim();
+  if(!name){
+    showToast('❌ أدخل اسمك أولاً');
+    return;
+  }
+  
+  playerNameInput = name;
+  G.playerName = name;
+  G.playerId = generatePlayerId();
+  G.roomId = generateRoomId();
+  G.isHost = true;
+  G.players = [{ id: G.playerId, name: G.playerName, isHost: true }];
+  G.scores = {};
+  G.scores[G.playerId] = 0;
+  G.gameActive = false;
+  G.currentTurn = G.playerId;
+  G.waitingForVote = false;
+  
+  if(firebaseAvailable && database){
+    const roomRef = database.ref('rooms/' + G.roomId);
+    roomRef.set({
+      hostId: G.playerId,
+      players: G.players,
+      scores: G.scores,
+      gameActive: false,
+      currentTurn: G.playerId,
+      currentCategory: 'friends',
+      currentQuestion: null,
+      waitingForVote: false,
+      roundEndTime: null,
+      votes: {},
+      createdAt: Date.now()
+    }).then(() => {
+      listenToRoom();
+      currentScreen = 'room';
+      render();
+      showToast(`✅ تم إنشاء الغرفة ${G.roomId}!`, '#00ff87');
+      copyRoomCodeToClipboard();
+    }).catch(err => {
+      console.error(err);
+      showToast('❌ فشل إنشاء الغرفة، حاول مرة أخرى');
+    });
+  } else {
+    showToast('⚠️ مشكلة في الاتصال بقاعدة البيانات');
+  }
+}
+
+function joinRoom(){
+  const name = document.getElementById('playerNameInput')?.value.trim();
+  const code = document.getElementById('roomCodeInput')?.value.trim().toUpperCase();
+  
+  if(!name){
+    showToast('❌ أدخل اسمك أولاً');
+    return;
+  }
+  if(!code){
+    showToast('❌ أدخل رمز الغرفة');
+    return;
+  }
+  
+  playerNameInput = name;
+  G.playerName = name;
+  G.playerId = generatePlayerId();
+  G.roomId = code;
+  G.isHost = false;
+  
+  if(firebaseAvailable && database){
+    const roomRef = database.ref('rooms/' + code);
+    roomRef.once('value').then(snapshot => {
+      const room = snapshot.val();
+      if(!room){
+        showToast('❌ الغرفة غير موجودة');
+        return;
+      }
+      if(room.players && room.players.length >= 6){
+        showToast('❌ الغرفة ممتلئة (حد أقصى 6 لاعبين)');
+        return;
+      }
+      const newPlayer = { id: G.playerId, name: G.playerName, isHost: false };
+      const updatedPlayers = room.players ? [...room.players, newPlayer] : [newPlayer];
+      const updatedScores = { ...(room.scores || {}), [G.playerId]: 0 };
+      
+      roomRef.update({
+        players: updatedPlayers,
+        scores: updatedScores
+      }).then(() => {
+        listenToRoom();
+        currentScreen = 'room';
+        render();
+        showToast(`✅ انضممت إلى الغرفة ${code}!`, '#00ff87');
+      });
+    }).catch(err => {
+      showToast('❌ فشل الاتصال بالغرفة');
+    });
+  } else {
+    showToast('⚠️ مشكلة في الاتصال بقاعدة البيانات');
+  }
+}
+
+function listenToRoom(){
+  if(!firebaseAvailable || !database || !G.roomId) return;
+  
+  const roomRef = database.ref('rooms/' + G.roomId);
+  roomRef.on('value', (snapshot) => {
+    const room = snapshot.val();
+    if(!room){
+      showToast('❌ الغرفة أغلقت أو لم تعد موجودة');
+      currentScreen = 'lobby';
+      render();
+      return;
+    }
+    
+    // Update local state
+    G.players = room.players || [];
+    G.scores = room.scores || {};
+    G.gameActive = room.gameActive || false;
+    G.currentTurn = room.currentTurn;
+    G.currentQuestion = room.currentQuestion;
+    G.waitingForVote = room.waitingForVote || false;
+    G.roundEndTime = room.roundEndTime;
+    G.currentCategory = room.currentCategory || 'friends';
+    G.votes = room.votes || {};
+    
+    // Check if I have voted
+    G.myVoteCast = G.votes[G.playerId] ? true : false;
+    
+    // Check for round results
+    if(room.roundResults && !room.resultsShown){
+      showRoundResults(room.roundResults);
+      database.ref('rooms/' + G.roomId).update({ resultsShown: true });
+    }
+    
+    // Determine screen based on game state
+    if(!G.gameActive){
+      currentScreen = 'room';
+    } else if(G.waitingForVote && G.currentTurn === G.playerId && !G.myVoteCast){
+      currentScreen = 'game';
+    } else if(G.gameActive){
+      currentScreen = 'waiting';
+    }
+    
+    render();
+  });
+}
+
+function startGame(){
+  if(!G.isHost){
+    showToast('❌ فقط مضيف الغرفة يمكنه بدء المباراة');
+    return;
+  }
+  if(G.players.length < 2){
+    showToast('❌ تحتاج على الأقل لاعبين لبدء المباراة');
+    return;
+  }
+  
+  const randomCat = getRandomCategory();
+  const firstPlayer = G.players[0]?.id;
+  
+  database.ref('rooms/' + G.roomId).update({
+    gameActive: true,
+    currentTurn: firstPlayer,
+    currentCategory: randomCat,
+    currentQuestion: getRandomQuestion(randomCat),
+    waitingForVote: true,
+    roundEndTime: Date.now() + 30000,
+    votes: {},
+    roundResults: null,
+    resultsShown: false
+  }).then(() => {
+    showToast('🎮 المباراة بدأت!', '#00ff87');
+  }).catch(err => {
+    showToast('❌ فشل بدء المباراة');
+  });
+}
+
+function castVote(targetPlayerId){
+  if(!G.waitingForVote){
+    showToast('❌ ليس دور التصويت الآن');
+    return;
+  }
+  if(G.currentTurn !== G.playerId){
+    showToast('❌ ليس دورك الآن');
+    return;
+  }
+  if(G.myVoteCast){
+    showToast('❌ لقد صوّت بالفعل');
+    return;
+  }
+  
+  const points = 10;
+  const roomRef = database.ref('rooms/' + G.roomId);
+  
+  roomRef.once('value').then(snapshot => {
+    const room = snapshot.val();
+    if(!room) return;
+    
+    const currentScores = room.scores || {};
+    const newScores = { ...currentScores };
+    newScores[targetPlayerId] = (newScores[targetPlayerId] || 0) + points;
+    
+    const votes = room.votes || {};
+    votes[G.playerId] = targetPlayerId;
+    
+    // Check if all players have voted
+    const totalPlayers = G.players.length;
+    const votesCount = Object.keys(votes).length;
+    const allVoted = votesCount >= totalPlayers;
+    
+    const targetPlayer = G.players.find(p => p.id === targetPlayerId);
+    showToast(`✅ ${G.playerName} صوت لـ ${targetPlayer?.name || 'اللاعب'} +${points} نقطة`, '#00ff87');
+    spawnBurst(window.innerWidth/2, window.innerHeight/2);
+    
+    if(allVoted){
+      // End round - show results
+      roomRef.update({
+        scores: newScores,
+        votes: votes,
+        waitingForVote: false,
+        roundResults: { winner: targetPlayerId, points: points, votesCount: votesCount }
+      });
+      
+      // Move to next turn after delay
+      setTimeout(() => {
+        const currentIndex = G.players.findIndex(p => p.id === G.currentTurn);
+        const nextIndex = (currentIndex + 1) % G.players.length;
+        const nextPlayer = G.players[nextIndex];
+        const newCat = getRandomCategory();
+        
+        database.ref('rooms/' + G.roomId).update({
+          currentTurn: nextPlayer.id,
+          currentCategory: newCat,
+          currentQuestion: getRandomQuestion(newCat),
+          waitingForVote: true,
+          roundEndTime: Date.now() + 30000,
+          votes: {},
+          roundResults: null,
+          resultsShown: false
+        });
+      }, 4000);
+    } else {
+      roomRef.update({
+        scores: newScores,
+        votes: votes
+      });
+    }
+  });
+}
+
+function showRoundResults(results){
+  const winner = G.players.find(p => p.id === results.winner);
+  showToast(`🎉 ${winner?.name || 'اللاعب'} حصل على ${results.points} نقطة!`, '#ffd700', 3000);
+  spawnBurst(window.innerWidth/2, window.innerHeight/2);
+}
+
+function leaveRoom(){
+  if(firebaseAvailable && database && G.roomId){
+    const roomRef = database.ref('rooms/' + G.roomId);
+    roomRef.once('value').then(snapshot => {
+      const room = snapshot.val();
+      if(room && room.players){
+        const updatedPlayers = room.players.filter(p => p.id !== G.playerId);
+        if(updatedPlayers.length === 0){
+          roomRef.remove();
+        } else {
+          roomRef.update({ players: updatedPlayers });
+        }
+      }
+    });
+  }
+  
+  G.roomId = null;
+  G.playerId = null;
+  G.isHost = false;
+  G.gameActive = false;
+  currentScreen = 'lobby';
+  render();
+}
+
+function copyRoomCodeToClipboard(){
+  if(G.roomId){
+    navigator.clipboard.writeText(G.roomId);
+    showToast('📋 تم نسخ رمز الغرفة!', '#00ff87');
+  }
+}
+
+function shareInviteLink(){
+  const text = `انضم للعب "شكون أكثر واحد؟" معي! رمز الغرفة: ${G.roomId}`;
+  if(navigator.share){
+    navigator.share({ title: 'شكون أكثر واحد؟', text: text });
+  } else {
+    copyRoomCodeToClipboard();
+  }
+}
+
+// ============================================================
+// 🎨 RENDER FUNCTIONS
+// ============================================================
+
+function render(){
+  if(currentScreen === 'lobby') renderLobby();
+  else if(currentScreen === 'room') renderRoom();
+  else if(currentScreen === 'game') renderGame();
+  else if(currentScreen === 'waiting') renderWaiting();
+}
+
+function renderLobby(){
+  const app = document.getElementById('appRoot');
+  app.innerHTML = `
+    <div class="text-center" style="padding: 1rem 0 2rem">
+      <div style="font-size: 3rem; margin-bottom: 0.5rem">🔥</div>
+      <div style="font-size: 1.5rem; font-weight: 900; background: linear-gradient(90deg, var(--accent), var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent">
+        شكون أكثر واحد؟
+      </div>
+      <div style="color: #aaa; margin-bottom: 2rem">العب مع أصحابك أونلاين!</div>
+    </div>
+    
+    <div class="card">
+      <input type="text" id="playerNameInput" placeholder="اسمك" maxlength="15" value="${playerNameInput.replace(/['"]/g, '&quot;')}">
+      <button class="btn-primary" onclick="createRoom()">🚀 إنشاء غرفة جديدة</button>
+      <div class="text-center" style="margin: 0.5rem 0; color: #555">━━ أو ━━</div>
+      <input type="text" id="roomCodeInput" placeholder="رمز الغرفة (6 أحرف)" maxlength="6" style="text-transform:uppercase" value="${roomCodeInput}">
+      <button class="btn-secondary" onclick="joinRoom()">🔗 انضم إلى غرفة</button>
+    </div>
+    
+    <div class="text-center text-dim" style="margin-top: 1rem">
+      ${firebaseAvailable ? '🟢 متصل بالإنترنت - جاهز للعب!' : '🔴 مشكلة في الاتصال - تأكد من اتصالك بالإنترنت'}
+    </div>
+  `;
+}
+
+function renderRoom(){
+  const app = document.getElementById('appRoot');
+  const playerCount = G.players.length;
+  const readyToStart = playerCount >= 2 && G.isHost;
+  
+  const playersHtml = G.players.map(p => `
+    <div class="player-chip ${p.isHost ? 'host' : ''} ${p.id === G.playerId ? 'you' : ''}">
+      ${p.isHost ? '👑 ' : ''}${escapeHtml(p.name)} ${p.id === G.playerId ? '(أنت)' : ''}
+      <span class="score-display" style="margin-right: auto; font-size: 0.7rem">${G.scores[p.id] || 0}★</span>
+    </div>
+  `).join('');
+  
+  app.innerHTML = `
+    <div class="text-center" style="margin-bottom: 1rem">
+      <div style="font-size: 0.8rem; color: #555">رمز الغرفة</div>
+      <div class="room-code">
+        <div class="code">${G.roomId}</div>
+        <button onclick="copyRoomCodeToClipboard()" style="background: rgba(255,255,255,0.1); border: none; border-radius: 2rem; padding: 0.3rem 0.8rem; color: var(--gold); font-size: 0.7rem; cursor: pointer; margin-top: 0.3rem">
+          📋 نسخ
+        </button>
+        <button onclick="shareInviteLink()" style="background: rgba(255,255,255,0.1); border: none; border-radius: 2rem; padding: 0.3rem 0.8rem; color: var(--cyan); font-size: 0.7rem; cursor: pointer; margin-top: 0.3rem; margin-right: 0.5rem">
+          🔗 مشاركة
+        </button>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="flex-b" style="margin-bottom: 0.5rem">
+        <span>👥 اللاعبون (${playerCount}/6)</span>
+        <span class="text-dim">🏆 نقاط</span>
+      </div>
+      <div class="players-list">${playersHtml || '<div class="text-dim">لا يوجد لاعبين</div>'}</div>
+    </div>
+    
+    <div class="waiting-spinner">
+      <div class="spinner"></div>
+      <div style="margin-bottom: 0.5rem">
+        ${G.isHost ? '⏳ بانتظار انضمام لاعبين آخرين...' : '⏳ بانتظار بدء المباراة من قبل المضيف...'}
+      </div>
+      ${readyToStart ? `<button class="btn-primary mt2" onclick="startGame()">🎮 بدء اللعب</button>` : ''}
+    </div>
+    
+    <button class="btn-secondary" onclick="leaveRoom()" style="background: rgba(255,45,85,0.2); box-shadow: none">🚪 مغادرة الغرفة</button>
+  `;
+}
+
+function renderWaiting(){
+  const app = document.getElementById('appRoot');
+  const category = CATEGORIES[G.currentCategory] || CATEGORIES.friends;
+  
+  app.innerHTML = `
+    <div class="text-center" style="padding: 1rem 0">
+      <div class="spinner" style="width: 50px; height: 50px"></div>
+      <div style="font-size: 1rem; font-weight: 700; margin: 1rem 0; color: var(--cyan)">
+        ⏳ دور لاعب آخر...
+      </div>
+      
+      <div class="card" style="background: rgba(0,0,0,0.3)">
+        <div style="font-size: 0.7rem; color: #666; margin-bottom: 0.3rem">السؤال الحالي</div>
+        <div style="font-weight: 700; font-size: 0.95rem">${G.currentQuestion || '...'}</div>
+        <div style="margin-top: 0.5rem">
+          <span class="role-badge" style="background: ${category.color}20; color: ${category.color}">
+            ${category.emoji} ${category.label}
+          </span>
+        </div>
+      </div>
+      
+      <div class="card" style="margin-top: 0.5rem">
+        <div class="section-title">📊 النتائج الحالية</div>
+        ${G.players.map(p => `
+          <div class="flex-b" style="margin-bottom: 0.3rem; font-size: 0.85rem">
+            <span>${escapeHtml(p.name)} ${p.id === G.currentTurn ? '🎯' : ''}</span>
+            <span class="text-gold">${G.scores[p.id] || 0} نقطة</span>
+          </div>
+        `).join('')}
+      </div>
+      
+      <button class="btn-secondary mt2" onclick="refreshRoom()" style="background: rgba(255,255,255,0.1)">🔄 تحديث</button>
+      <button class="btn-secondary" onclick="leaveRoom()" style="background: rgba(255,45,85,0.2); margin-top: 0.5rem">🚪 مغادرة</button>
+    </div>
+  `;
+}
+
+function renderGame(){
+  const app = document.getElementById('appRoot');
+  const category = CATEGORIES[G.currentCategory] || CATEGORIES.friends;
+  const timeLeft = G.roundEndTime ? Math.max(0, Math.floor((G.roundEndTime - Date.now()) / 1000)) : 30;
+  const currentPlayer = G.players.find(p => p.id === G.currentTurn);
+  
+  let voteButtons = '';
+  if(G.myVoteCast){
+    voteButtons = `<div class="waiting-turn">✅ لقد صوّت! انتظر النتائج...</div>`;
+  } else {
+    voteButtons = G.players.filter(p => p.id !== G.playerId).map(p => `
+      <button class="vote-btn" onclick="castVote('${p.id}')" style="background: ${category.gradient}">
+        <span>${escapeHtml(p.name)}</span>
+        <span class="score-display">${G.scores[p.id] || 0}★</span>
+      </button>
+    `).join('');
+    
+    if(voteButtons === ''){
+      voteButtons = `<div class="waiting-turn">⏳ لا يوجد لاعبين آخرين للتصويت</div>`;
+    }
+  }
+  
+  app.innerHTML = `
+    <div class="flex-b" style="margin-bottom: 0.5rem">
+      <div style="background: ${category.color}20; border-radius: 2rem; padding: 0.3rem 0.9rem; font-size: 0.8rem">
+        ${category.emoji} ${category.label}
+      </div>
+      <div class="role-badge">🎯 دور: ${currentPlayer?.name || '...'}</div>
+    </div>
+    
+    <div class="question-box">
+      <div class="question-text">${G.currentQuestion || '...'}</div>
+    </div>
+    
+    <div class="card">
+      <div class="flex-b" style="margin-bottom: 0.5rem">
+        <span>⏱️ متبقي: <span id="timer" style="color: var(--accent); font-weight: 900">${timeLeft}</span> ثانية</span>
+        <span>👥 ${G.players.length} لاعب</span>
+      </div>
+      <div class="players-list" style="margin-bottom: 0.5rem">
+        ${G.players.map(p => `
+          <div class="player-chip ${p.id === G.currentTurn ? 'host' : ''}">
+            ${escapeHtml(p.name)} ${p.id === G.currentTurn ? '🎯' : ''}
+            <span class="score-display" style="margin-right: auto; font-size: 0.7rem">${G.scores[p.id] || 0}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    
+    <div class="section-title">👇 اختر من يستحق النقطة</div>
+    ${voteButtons}
+    
+    <button class="btn-secondary mt2" onclick="leaveRoom()" style="background: rgba(255,255,255,0.05); margin-top: 1rem">🚪 مغادرة المباراة</button>
+  `;
+  
+  // Timer countdown
+  if(G.roundEndTime && !G.myVoteCast){
+    const timerEl = document.getElementById('timer');
+    if(timerEl){
+      const interval = setInterval(() => {
+        const left = Math.max(0, Math.floor((G.roundEndTime - Date.now()) / 1000));
+        const currentTimer = document.getElementById('timer');
+        if(currentTimer) currentTimer.innerText = left;
+        if(left <= 0 || G.myVoteCast) clearInterval(interval);
+      }, 1000);
+    }
+  }
+}
+
+function refreshRoom(){
+  if(firebaseAvailable && G.roomId){
+    const roomRef = database.ref('rooms/' + G.roomId);
+    roomRef.once('value').then(snapshot => {
+      const room = snapshot.val();
+      if(room){
+        G.players = room.players || [];
+        G.scores = room.scores || {};
+        G.gameActive = room.gameActive;
+        G.currentTurn = room.currentTurn;
+        G.currentQuestion = room.currentQuestion;
+        G.waitingForVote = room.waitingForVote;
+        render();
+        showToast('🔄 تم التحديث', '#00ff87');
+      }
+    });
+  }
+}
+
+function escapeHtml(str){
+  if(!str) return '';
+  return str.replace(/[&<>]/g, function(m){
+    if(m === '&') return '&amp;';
+    if(m === '<') return '&lt;';
+    if(m === '>') return '&gt;';
+    return m;
+  });
+}
+
+// Make functions available globally
+window.createRoom = createRoom;
+window.joinRoom = joinRoom;
+window.startGame = startGame;
+window.castVote = castVote;
+window.leaveRoom = leaveRoom;
+window.copyRoomCodeToClipboard = copyRoomCodeToClipboard;
+window.shareInviteLink = shareInviteLink;
+window.refreshRoom = refreshRoom;
+
+// ============================================================
+// 🚀 INITIAL RENDER
+// ============================================================
+render();
+</script>
+</body>
+</html>
